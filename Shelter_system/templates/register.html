@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Register New User - Shelter Management System{% endblock %}
+
+{% block content %}
+<style>
+    .form-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .section-title {
+        color: #0d6efd;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .required::after {
+        content: " *";
+        color: red;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-person-plus"></i> Register New User</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('register') }}">
+                        <!-- User Information -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-person-badge"></i> User Information
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="username" class="form-label required">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" required 
+                                           placeholder="Choose a username">
+                                    <small class="form-text text-muted">Username must be unique</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label required">Email Address</label>
+                                    <input type="email" class="form-control" id="email" name="email" required 
+                                           placeholder="user@example.com">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="full_name" class="form-label required">Full Name</label>
+                                    <input type="text" class="form-control" id="full_name" name="full_name" required 
+                                           placeholder="Enter full name">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="role" class="form-label required">Role</label>
+                                    <select class="form-select" id="role" name="role" required>
+                                        <option value="staff">Staff</option>
+                                        <option value="admin">Administrator</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Information -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-shield-lock"></i> Password
+                            </h4>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="password" class="form-label required">Password</label>
+                                    <input type="password" class="form-control" id="password" name="password" required 
+                                           placeholder="Enter password">
+                                    <small class="form-text text-muted">Password must be at least 6 characters long</small>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="confirm_password" class="form-label required">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" required 
+                                           placeholder="Confirm password">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{{ url_for('list_users') }}" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus"></i> Create User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="alert alert-info mt-4">
+                <h5><i class="bi bi-question-circle"></i> User Roles</h5>
+                <ul class="mb-0">
+                    <li><strong>Administrator:</strong> Full system access including user management</li>
+                    <li><strong>Staff:</strong> Can manage pets but cannot create or manage users</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

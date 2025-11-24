@@ -1,0 +1,218 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Search - VetCare{% endblock %}
+{% block page_title %}Search{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-search text-primary me-2"></i>
+                    Search Veterinary System
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="get" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                {{ form.query }}
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search me-1"></i> Search
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.search_type }}
+                        </div>
+                    </div>
+                </form>
+
+                {% if form.cleaned_data.query %}
+                <div class="search-results">
+                    <h6 class="text-muted mb-3">
+                        Search results for "{{ form.cleaned_data.query }}"
+                        <span class="badge bg-secondary">{{ form.cleaned_data.get_search_type_display }}</span>
+                    </h6>
+
+                    <!-- Pets Results -->
+                    {% if results.pets %}
+                    <div class="search-section mb-4">
+                        <h6 class="fw-bold text-primary mb-3">
+                            <i class="fas fa-paw me-2"></i>Pets ({{ results.pets|length }})
+                        </h6>
+                        <div class="row">
+                            {% for pet in results.pets %}
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-paw text-primary me-1"></i>
+                                            {{ pet.name }}
+                                        </h6>
+                                        <p class="card-text mb-1 small">
+                                            <strong>Owner:</strong> {{ pet.owner_name }}
+                                        </p>
+                                        <p class="card-text mb-1 small">
+                                            <strong>Breed:</strong> {{ pet.breed|default:"Unknown" }}
+                                        </p>
+                                        <p class="card-text mb-2 small">
+                                            <strong>Age:</strong> {{ pet.age|default:"Unknown" }} years
+                                        </p>
+                                        <a href="{% url 'pet_detail' pet.pk %}" class="btn btn-outline-primary btn-sm w-100">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Owners Results -->
+                    {% if results.owners %}
+                    <div class="search-section mb-4">
+                        <h6 class="fw-bold text-success mb-3">
+                            <i class="fas fa-user me-2"></i>Owners ({{ results.owners|length }})
+                        </h6>
+                        <div class="row">
+                            {% for pet in results.owners %}
+                            <div class="col-lg-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <i class="fas fa-user text-success me-1"></i>
+                                            {{ pet.owner_name }}
+                                        </h6>
+                                        <p class="card-text mb-1 small">
+                                            <strong>Pet:</strong> {{ pet.name }}
+                                        </p>
+                                        {% if pet.owner_email %}
+                                        <p class="card-text mb-1 small">
+                                            <strong>Email:</strong> {{ pet.owner_email }}
+                                        </p>
+                                        {% endif %}
+                                        {% if pet.owner_phone %}
+                                        <p class="card-text mb-2 small">
+                                            <strong>Phone:</strong> {{ pet.owner_phone }}
+                                        </p>
+                                        {% endif %}
+                                        <a href="{% url 'pet_detail' pet.pk %}" class="btn btn-outline-success btn-sm">
+                                            View Pet
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Appointments Results -->
+                    {% if results.appointments %}
+                    <div class="search-section mb-4">
+                        <h6 class="fw-bold text-warning mb-3">
+                            <i class="fas fa-calendar me-2"></i>Appointments ({{ results.appointments|length }})
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Pet</th>
+                                        <th>Veterinarian</th>
+                                        <th>Reason</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for appointment in results.appointments %}
+                                    <tr>
+                                        <td>{{ appointment.date|date:"M d, Y H:i" }}</td>
+                                        <td>{{ appointment.pet.name }}</td>
+                                        <td>Dr. {{ appointment.vet.name }}</td>
+                                        <td>{{ appointment.reason }}</td>
+                                        <td>
+                                            <span class="badge {% if appointment.status == 'scheduled' %}bg-warning{% elif appointment.status == 'confirmed' %}bg-success{% elif appointment.status == 'completed' %}bg-info{% else %}bg-secondary{% endif %}">
+                                                {{ appointment.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'appointment_detail' appointment.pk %}" class="btn btn-outline-warning btn-sm">
+                                                View
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Vets Results -->
+                    {% if results.vets %}
+                    <div class="search-section mb-4">
+                        <h6 class="fw-bold text-info mb-3">
+                            <i class="fas fa-user-md me-2"></i>Veterinarians ({{ results.vets|length }})
+                        </h6>
+                        <div class="row">
+                            {% for vet in results.vets %}
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <h6 class="card-title">Dr. {{ vet.name }}</h6>
+                                        <p class="card-text text-muted mb-2">
+                                            {{ vet.get_specialization_display }}
+                                        </p>
+                                        <p class="card-text small text-muted mb-3">
+                                            {{ vet.email }}
+                                        </p>
+                                        <a href="{% url 'vet_dashboard_with_id' vet.pk %}" class="btn btn-outline-info btn-sm">
+                                            View Dashboard
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- No Results -->
+                    {% if not results.pets and not results.owners and not results.appointments and not results.vets %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No results found</h5>
+                        <p class="text-muted">Try different search terms or search in all categories.</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Ready to search</h5>
+                    <p class="text-muted">Enter your search terms above to find pets, owners, appointments, or veterinarians.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.search-section {
+    border-left: 4px solid #e9ecef;
+    padding-left: 1rem;
+}
+
+.search-section h6 {
+    border-bottom: 2px solid;
+    padding-bottom: 0.5rem;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Schedule - Dr. {{ vet.name }}{% endblock %}
+{% block page_title %}Schedule - Dr. {{ vet.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-calendar text-primary me-2"></i>
+                    Daily Schedule - Dr. {{ vet.name }}
+                </h5>
+                <div class="d-flex">
+                    <input type="date" class="form-control me-2" 
+                           value="{{ selected_date|date:'Y-m-d' }}"
+                           onchange="window.location.href = '?date=' + this.value">
+                    <a href="{% url 'vet_dashboard_with_id' vet.pk %}" class="btn btn-outline-primary">
+                        <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Showing schedule for <strong>{{ selected_date|date:"F j, Y" }}</strong>. 
+                    Working hours: {{ vet.working_hours_start }} - {{ vet.working_hours_end }}
+                </div>
+
+                {% if daily_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Pet</th>
+                                    <th>Owner</th>
+                                    <th>Reason</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in daily_appointments %}
+                                <tr>
+                                    <td class="fw-bold">{{ appointment.date|time }}</td>
+                                    <td>
+                                        <i class="fas fa-paw text-primary me-1"></i>
+                                        {{ appointment.pet.name }}
+                                    </td>
+                                    <td>{{ appointment.pet.owner_name }}</td>
+                                    <td>{{ appointment.reason }}</td>
+                                    <td>{{ appointment.duration_minutes }} min</td>
+                                    <td>
+                                        <span class="badge {% if appointment.status == 'scheduled' %}bg-warning{% elif appointment.status == 'confirmed' %}bg-success{% elif appointment.status == 'in_progress' %}bg-primary{% else %}bg-secondary{% endif %}">
+                                            {{ appointment.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'appointment_detail' appointment.pk %}" class="btn btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            {% if appointment.status != 'completed' and appointment.status != 'cancelled' %}
+                                            <a href="{% url 'complete_appointment' appointment.pk %}" class="btn btn-outline-success">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-coffee fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">No appointments scheduled</h5>
+                        <p class="text-muted">Dr. {{ vet.name }} has no appointments scheduled for {{ selected_date|date:"F j, Y" }}.</p>
+                        <a href="{% url 'appointment_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Schedule Appointment
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

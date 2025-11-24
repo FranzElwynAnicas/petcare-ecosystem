@@ -1,0 +1,49 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Cancel Appointment - VetCare{% endblock %}
+{% block page_title %}Cancel Appointment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-times-circle me-2"></i>
+                    Cancel Appointment
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Are you sure you want to cancel this appointment?
+                </div>
+                
+                <div class="appointment-details mb-4">
+                    <h6 class="text-primary">Appointment Details:</h6>
+                    <p><strong>Pet:</strong> {{ appointment.pet.name }}</p>
+                    <p><strong>Owner:</strong> {{ appointment.pet.owner_name }}</p>
+                    <p><strong>Veterinarian:</strong> Dr. {{ appointment.vet.name }}</p>
+                    <p><strong>Date & Time:</strong> {{ appointment.date }}</p>
+                    <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+                    {% if appointment.notes %}
+                    <p><strong>Notes:</strong> {{ appointment.notes }}</p>
+                    {% endif %}
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'appointment_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Keep Appointment
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-times me-1"></i>Confirm Cancellation
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

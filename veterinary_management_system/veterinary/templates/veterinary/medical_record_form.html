@@ -1,0 +1,128 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}{{ title }} - VetCare{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-medical me-2"></i>
+                    {{ title }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Creating medical record for <strong>{{ pet.name }}</strong> (Owner: {{ pet.owner_name }})
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Veterinarian *</label>
+                                {{ form.vet }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Visit Date *</label>
+                                {{ form.visit_date }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-primary mt-4 mb-3">Vital Signs</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Weight (kg)</label>
+                                {{ form.weight }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Temperature (°C)</label>
+                                {{ form.temperature }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Heart Rate (BPM)</label>
+                                {{ form.heart_rate }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Respiratory Rate</label>
+                                {{ form.respiratory_rate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-primary mt-4 mb-3">Medical Information</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Diagnosis *</label>
+                        {{ form.diagnosis }}
+                        {% if form.diagnosis.errors %}
+                        <div class="text-danger">{{ form.diagnosis.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Symptoms</label>
+                        {{ form.symptoms }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Treatment</label>
+                        {{ form.treatment }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Medications</label>
+                        {{ form.medications }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        {{ form.notes }}
+                    </div>
+
+                    <h6 class="text-primary mt-4 mb-3">Follow-up</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3 form-check">
+                                {{ form.follow_up_required }}
+                                <label class="form-check-label" for="{{ form.follow_up_required.id_for_label }}">
+                                    Follow-up Required
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Follow-up Date</label>
+                                {{ form.follow_up_date }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'pet_detail' pet.pk %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Pet
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save me-1"></i>Save Medical Record
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

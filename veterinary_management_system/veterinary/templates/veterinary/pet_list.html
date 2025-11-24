@@ -1,0 +1,146 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Pets - VetCare{% endblock %}
+{% block page_title %}Pet Management{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-paw text-primary me-2"></i>
+                    All Pets
+                </h5>
+                <div class="d-flex">
+                    <form method="get" class="me-2">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search pets..." value="{{ request.GET.search }}">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                    <a href="{% url 'pet_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Add New Pet
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if pets %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Pet Name</th>
+                                    <th>Species</th>
+                                    <th>Breed</th>
+                                    <th>Owner</th>
+                                    <th>Age</th>
+                                    <th>Last Visit</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pet in pets %}
+                                <tr>
+                                    <td>
+                                        <i class="fas fa-paw text-primary me-1"></i>
+                                        <strong>{{ pet.name }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ pet.get_species_display }}</span>
+                                    </td>
+                                    <td>{{ pet.breed|default:"-" }}</td>
+                                    <td>{{ pet.owner_name }}</td>
+                                    <td>
+                                        {% if pet.age %}
+                                            {{ pet.age }} years
+                                        {% else %}
+                                            Unknown
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if pet.last_appointment %}
+                                            {{ pet.last_appointment.date|date:"M d, Y" }}
+                                        {% else %}
+                                            <span class="text-muted">No visits</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{% url 'pet_detail' pet.pk %}" class="btn btn-outline-primary">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'pet_update' pet.pk %}" class="btn btn-outline-secondary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'medical_record_create' pet.pk %}" class="btn btn-outline-success">
+                                                <i class="fas fa-file-medical"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-paw fa-4x text-muted mb-3"></i>
+                        <h5 class="text-muted">No pets found</h5>
+                        <p class="text-muted">
+                            {% if request.GET.search %}
+                                No pets match your search criteria.
+                            {% else %}
+                                Get started by adding your first pet to the system.
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'pet_create' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Add First Pet
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card stat-card border-primary">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-primary">{{ total_pets }}</h3>
+                <p class="mb-0 text-muted">Total Pets</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card border-success">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-success">{{ total_pets }}</h3>
+                <p class="mb-0 text-muted">In System</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card border-info">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-info">
+                    {% if total_pets > 5 %}5+{% else %}{{ total_pets }}{% endif %}
+                </h3>
+                <p class="mb-0 text-muted">Recently Added</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card border-warning">
+            <div class="card-body text-center">
+                <h3 class="fw-bold text-warning">{{ dog_count }}</h3>
+                <p class="mb-0 text-muted">Dogs</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

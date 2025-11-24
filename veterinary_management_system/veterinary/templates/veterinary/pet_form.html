@@ -1,0 +1,167 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}{{ title }} - VetCare{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-paw me-2"></i>
+                    {{ title }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">External Pet ID *</label>
+                                {{ form.external_pet_id }}
+                                {% if form.external_pet_id.errors %}
+                                <div class="text-danger">{{ form.external_pet_id.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Pet Name *</label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                <div class="text-danger">{{ form.name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Species *</label>
+                                {{ form.species }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Breed</label>
+                                {{ form.breed }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Sex *</label>
+                                {{ form.sex }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Date of Birth</label>
+                                {{ form.date_of_birth }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Color</label>
+                                {{ form.color }}
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Weight (kg)</label>
+                                {{ form.weight }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Microchip ID</label>
+                        {{ form.microchip_id }}
+                    </div>
+
+                    <hr>
+
+                    <h6 class="text-primary mb-3">
+                        <i class="fas fa-user me-2"></i>Owner Information
+                    </h6>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Owner Name *</label>
+                                {{ form.owner_name }}
+                                {% if form.owner_name.errors %}
+                                <div class="text-danger">{{ form.owner_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Owner Email</label>
+                                {{ form.owner_email }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Owner Phone</label>
+                                {{ form.owner_phone }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Emergency Contact</label>
+                                {{ form.emergency_contact }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Owner Address</label>
+                        {{ form.owner_address }}
+                    </div>
+
+                    <hr>
+
+                    <h6 class="text-primary mb-3">
+                        <i class="fas fa-heartbeat me-2"></i>Medical Information
+                    </h6>
+
+                    <div class="mb-3">
+                        <label class="form-label">Allergies</label>
+                        {{ form.allergies }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Chronic Conditions</label>
+                        {{ form.chronic_conditions }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Special Notes</label>
+                        {{ form.special_notes }}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% if pet %}{% url 'pet_detail' pet.pk %}{% else %}{% url 'pet_list' %}{% endif %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>
+                            {% if pet %}Update{% else %}Create{% endif %} Pet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

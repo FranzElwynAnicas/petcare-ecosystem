@@ -1,0 +1,113 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Medical Record - {{ medical_record.pet.name }}{% endblock %}
+{% block page_title %}Medical Record Details{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-medical me-2"></i>
+                    Medical Record - {{ medical_record.pet.name }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Visit Information</h6>
+                        <p><strong>Pet:</strong> 
+                            <a href="{% url 'pet_detail' medical_record.pet.pk %}">
+                                {{ medical_record.pet.name }}
+                            </a>
+                        </p>
+                        <p><strong>Owner:</strong> {{ medical_record.pet.owner_name }}</p>
+                        <p><strong>Veterinarian:</strong> Dr. {{ medical_record.vet.name }}</p>
+                        <p><strong>Visit Date:</strong> {{ medical_record.visit_date }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Vital Signs</h6>
+                        <p><strong>Weight:</strong> {{ medical_record.weight|default:"Not recorded" }} kg</p>
+                        <p><strong>Temperature:</strong> {{ medical_record.temperature|default:"Not recorded" }} °C</p>
+                        <p><strong>Heart Rate:</strong> {{ medical_record.heart_rate|default:"Not recorded" }} BPM</p>
+                        <p><strong>Respiratory Rate:</strong> {{ medical_record.respiratory_rate|default:"Not recorded" }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-primary">Medical Information</h6>
+                        <div class="mb-3">
+                            <strong>Diagnosis:</strong>
+                            <p class="mt-1">{{ medical_record.diagnosis|linebreaks }}</p>
+                        </div>
+
+                        {% if medical_record.symptoms %}
+                        <div class="mb-3">
+                            <strong>Symptoms:</strong>
+                            <p class="mt-1">{{ medical_record.symptoms|linebreaks }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if medical_record.treatment %}
+                        <div class="mb-3">
+                            <strong>Treatment:</strong>
+                            <p class="mt-1">{{ medical_record.treatment|linebreaks }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if medical_record.medications %}
+                        <div class="mb-3">
+                            <strong>Medications:</strong>
+                            <p class="mt-1">{{ medical_record.medications|linebreaks }}</p>
+                        </div>
+                        {% endif %}
+
+                        {% if medical_record.notes %}
+                        <div class="mb-3">
+                            <strong>Notes:</strong>
+                            <p class="mt-1">{{ medical_record.notes|linebreaks }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-primary">Follow-up</h6>
+                        <p>
+                            <strong>Follow-up Required:</strong> 
+                            {% if medical_record.follow_up_required %}
+                                <span class="badge bg-warning">Yes</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </p>
+                        {% if medical_record.follow_up_required and medical_record.follow_up_date %}
+                        <p><strong>Follow-up Date:</strong> {{ medical_record.follow_up_date }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'pet_detail' medical_record.pet.pk %}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Pet
+                    </a>
+                    <div>
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="fas fa-print me-1"></i>Print Record
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

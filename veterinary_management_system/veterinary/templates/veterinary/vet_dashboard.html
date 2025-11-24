@@ -1,0 +1,204 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Vet Dashboard - Dr. {{ vet.name }}{% endblock %}
+{% block page_title %}Vet Dashboard - Dr. {{ vet.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="vet-profile-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="display-6 fw-bold">Dr. {{ vet.name }}</h1>
+                    <p class="lead mb-1">{{ vet.get_specialization_display }}</p>
+                    <p class="mb-0 opacity-75">
+                        <i class="fas fa-phone me-1"></i>{{ vet.phone|default:"No phone" }} • 
+                        <i class="fas fa-envelope me-1"></i>{{ vet.email }}
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <i class="fas fa-user-md fa-4x opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Vet's Today Schedule -->
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-calendar-day text-primary me-2"></i>
+                    Today's Schedule
+                </h5>
+                <a href="{% url 'vet_schedule' vet.pk %}?date={{ today|date:'Y-m-d' }}" class="btn btn-outline-primary btn-sm">
+                    View Full Schedule
+                </a>
+            </div>
+            <div class="card-body">
+                {% if todays_appointments %}
+                    {% for appointment in todays_appointments %}
+                    <div class="appointment-card card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="card-title mb-0">
+                                    <i class="fas fa-paw text-primary me-1"></i>
+                                    {{ appointment.pet.name }}
+                                </h6>
+                                <span class="badge {% if appointment.status == 'scheduled' %}bg-warning{% elif appointment.status == 'confirmed' %}bg-success{% else %}bg-secondary{% endif %}">
+                                    {{ appointment.get_status_display }}
+                                </span>
+                            </div>
+                            <p class="card-text mb-1">
+                                <i class="fas fa-clock me-1 text-muted"></i>
+                                <strong>{{ appointment.date|time }}</strong> • {{ appointment.duration_minutes }}min
+                            </p>
+                            <p class="card-text mb-2 text-muted">
+                                {{ appointment.reason }}
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    Owner: {{ appointment.pet.owner_name }}
+                                </small>
+                                <div class="btn-group btn-group-sm">
+                                    {% if appointment.status != 'completed' %}
+                                    <a href="{% url 'complete_appointment' appointment.pk %}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check me-1"></i>Complete
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'appointment_update' appointment.pk %}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-coffee fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No appointments today</h5>
+                        <p class="text-muted">Enjoy your clear schedule!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Appointments & Quick Stats -->
+    <div class="col-lg-6">
+        <!-- Upcoming Appointments -->
+        <div class="card mb-4">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-calendar-week text-info me-2"></i>
+                    Upcoming Appointments
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if upcoming_appointments %}
+                    {% for appointment in upcoming_appointments|slice:":5" %}
+                    <div class="border-bottom pb-2 mb-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>{{ appointment.pet.name }}</strong>
+                                <br>
+                                <small class="text-muted">
+                                    {{ appointment.date|date:"M j" }} at {{ appointment.date|time }}
+                                </small>
+                                <br>
+                                <small>{{ appointment.reason }}</small>
+                            </div>
+                            <span class="badge bg-info">{{ appointment.get_status_display }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted text-center">No upcoming appointments</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Vet Quick Stats -->
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-chart-bar text-success me-2"></i>
+                    This Month's Stats
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <h4 class="fw-bold text-primary">{{ todays_appointments.count }}</h4>
+                        <small class="text-muted">Today</small>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="fw-bold text-info">{{ upcoming_appointments.count }}</h4>
+                        <small class="text-muted">Upcoming</small>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="fw-bold text-success">{{ recent_records.count }}</h4>
+                        <small class="text-muted">Recent Records</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Medical Records -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">
+                    <i class="fas fa-file-medical text-warning me-2"></i>
+                    Recent Medical Records
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_records %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Pet</th>
+                                    <th>Diagnosis</th>
+                                    <th>Treatment</th>
+                                    <th>Follow-up</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in recent_records %}
+                                <tr>
+                                    <td>{{ record.visit_date }}</td>
+                                    <td>
+                                        <i class="fas fa-paw text-primary me-1"></i>
+                                        {{ record.pet.name }}
+                                    </td>
+                                    <td>{{ record.diagnosis|truncatewords:5 }}</td>
+                                    <td>{{ record.treatment|truncatewords:5|default:"-" }}</td>
+                                    <td>
+                                        {% if record.follow_up_required %}
+                                            <span class="badge bg-warning">{{ record.follow_up_date }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Not required</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">No recent medical records</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

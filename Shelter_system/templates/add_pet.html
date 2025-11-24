@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Pet - Shelter Management System{% endblock %}
+
+{% block content %}
+<style>
+    .form-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .section-title {
+        color: #0d6efd;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .required::after {
+        content: " *";
+        color: red;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="bi bi-plus-circle"></i> Add New Pet to Shelter</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/pets/add" enctype="multipart/form-data">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-info-circle"></i> Basic Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label required">Pet Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="species" class="form-label required">Species</label>
+                                    <select class="form-select" id="species" name="species" required>
+                                        <option value="">Select Species</option>
+                                        <option value="dog">Dog</option>
+                                        <option value="cat">Cat</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="breed" class="form-label">Breed</label>
+                                    <input type="text" class="form-control" id="breed" name="breed" placeholder="e.g., Golden Retriever, Siamese">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="age" class="form-label required">Age (years)</label>
+                                    <input type="number" class="form-control" id="age" name="age" min="0" max="30" step="1" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="gender" class="form-label required">Gender</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="">Select</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label required">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" required placeholder="Brief description of the pet's personality and characteristics"></textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label required">Status</label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="available" selected>Available</option>
+                                        <option value="pending">Pending Adoption</option>
+                                        <option value="adopted">Adopted</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-heart-pulse"></i> Medical Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="vaccinated" name="vaccinated">
+                                        <label class="form-check-label" for="vaccinated">
+                                            Vaccinated
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="spayed_neutered" name="spayed_neutered">
+                                        <label class="form-check-label" for="spayed_neutered">
+                                            Spayed/Neutered
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="microchipped" name="microchipped">
+                                        <label class="form-check-label" for="microchipped">
+                                            Microchipped
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="special_needs" class="form-label">Special Needs / Medical Notes</label>
+                                <textarea class="form-control" id="special_needs" name="special_needs" rows="3" placeholder="Any special medical needs, allergies, medications, or health conditions"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Behavioral Traits -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-emoji-smile"></i> Behavioral Traits
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_kids" name="good_with_kids" checked>
+                                        <label class="form-check-label" for="good_with_kids">
+                                            Good with Kids
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_pets" name="good_with_pets" checked>
+                                        <label class="form-check-label" for="good_with_pets">
+                                            Good with Other Pets
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_dogs" name="good_with_dogs" checked>
+                                        <label class="form-check-label" for="good_with_dogs">
+                                            Good with Dogs
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_cats" name="good_with_cats" checked>
+                                        <label class="form-check-label" for="good_with_cats">
+                                            Good with Cats
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="energy_level" class="form-label">Energy Level</label>
+                                <select class="form-select" id="energy_level" name="energy_level">
+                                    <option value="">Select Energy Level</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Pet Images -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-images"></i> Pet Images
+                            </h4>
+                            <div class="mb-3">
+                                <label for="image_url" class="form-label">Primary Image URL</label>
+                                <input type="url" class="form-control" id="image_url" name="image_url" placeholder="https://example.com/pet-image.jpg">
+                                <small class="form-text text-muted">Paste image URL or leave blank to add images later</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image_caption" class="form-label">Image Caption</label>
+                                <input type="text" class="form-control" id="image_caption" name="image_caption" placeholder="e.g., Playing in the yard">
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> You can add more images after creating the pet record.
+                            </div>
+                        </div>
+
+                        <!-- Shelter Log Information -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-person-badge"></i> Staff Information
+                            </h4>
+                            <div class="mb-3">
+                                <label for="performed_by" class="form-label required">Staff Name</label>
+                                <input type="text" class="form-control" id="performed_by" name="performed_by" required placeholder="Your name">
+                                <small class="form-text text-muted">This will be logged in the shelter activity log</small>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="/" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Add Pet to Shelter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Section -->
+            <div class="alert alert-info mt-4">
+                <h5><i class="bi bi-question-circle"></i> Need Help?</h5>
+                <ul class="mb-0">
+                    <li><strong>Medical Info:</strong> Include vaccination dates, spay/neuter status, known conditions</li>
+                    <li><strong>Behavioral Traits:</strong> Describe temperament, energy level, compatibility with kids/pets</li>
+                    <li><strong>Images:</strong> Add a primary image now, more can be uploaded from the pet's detail page</li>
+                    <li><strong>Status:</strong> Most new pets should be marked as "Available" unless already adopted</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

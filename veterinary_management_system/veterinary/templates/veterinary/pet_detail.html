@@ -1,0 +1,244 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}{{ pet.name }} - VetCare{% endblock %}
+{% block page_title %}{{ pet.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Pet Information -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-paw me-2"></i>
+                    Pet Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <i class="fas fa-paw fa-4x text-primary"></i>
+                    <h4 class="mt-2">{{ pet.name }}</h4>
+                    <span class="badge bg-info">{{ pet.get_species_display }}</span>
+                </div>
+                
+                <div class="pet-details">
+                    {% if pet.external_pet_id %}
+                    <p><strong>External ID:</strong> {{ pet.external_pet_id }}</p>
+                    {% endif %}
+                    <p><strong>Breed:</strong> {{ pet.breed|default:"Unknown" }}</p>
+                    <p><strong>Sex:</strong> {{ pet.get_sex_display }}</p>
+                    <p><strong>Color:</strong> {{ pet.color|default:"Unknown" }}</p>
+                    <p><strong>Date of Birth:</strong> {{ pet.date_of_birth|default:"Unknown" }}</p>
+                    <p><strong>Age:</strong> {{ pet.age|default:"Unknown" }} years</p>
+                    <p><strong>Weight:</strong> {{ pet.weight|default:"Unknown" }} kg</p>
+                    <p><strong>Microchip ID:</strong> {{ pet.microchip_id|default:"None" }}</p>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <a href="{% url 'pet_update' pet.pk %}" class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-1"></i>Edit Information
+                    </a>
+                    <a href="{% url 'medical_record_create' pet.pk %}" class="btn btn-outline-success">
+                        <i class="fas fa-file-medical me-1"></i>Add Medical Record
+                    </a>
+                    <a href="{% url 'add_vaccine_record' pet.pk %}" class="btn btn-outline-info">
+                        <i class="fas fa-syringe me-1"></i>Add Vaccine
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Owner Information -->
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user me-2"></i>
+                    Owner Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Name:</strong> {{ pet.owner_name }}</p>
+                {% if pet.owner_email %}
+                <p><strong>Email:</strong> {{ pet.owner_email }}</p>
+                {% endif %}
+                {% if pet.owner_phone %}
+                <p><strong>Phone:</strong> {{ pet.owner_phone }}</p>
+                {% endif %}
+                {% if pet.emergency_contact %}
+                <p><strong>Emergency Contact:</strong> {{ pet.emergency_contact }}</p>
+                {% endif %}
+                {% if pet.owner_address %}
+                <p><strong>Address:</strong> {{ pet.owner_address }}</p>
+                {% endif %}
+                
+                {% if pet.allergies %}
+                <div class="alert alert-warning mt-3">
+                    <strong>Allergies:</strong> {{ pet.allergies }}
+                </div>
+                {% endif %}
+                
+                {% if pet.chronic_conditions %}
+                <div class="alert alert-info mt-2">
+                    <strong>Chronic Conditions:</strong> {{ pet.chronic_conditions }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Medical History -->
+    <div class="col-lg-8">
+        <!-- Appointments -->
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar me-2"></i>
+                    Appointments
+                </h5>
+                <a href="{% url 'appointment_create' %}" class="btn btn-sm btn-outline-dark">
+                    <i class="fas fa-plus me-1"></i>New Appointment
+                </a>
+            </div>
+            <div class="card-body">
+                {% if appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Veterinarian</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments|slice:":5" %}
+                                <tr>
+                                    <td>{{ appointment.date|date:"M d, Y H:i" }}</td>
+                                    <td>Dr. {{ appointment.vet.name }}</td>
+                                    <td>{{ appointment.reason }}</td>
+                                    <td>
+                                        <span class="badge {% if appointment.status == 'scheduled' %}bg-warning{% elif appointment.status == 'confirmed' %}bg-success{% elif appointment.status == 'completed' %}bg-info{% else %}bg-secondary{% endif %}">
+                                            {{ appointment.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'appointment_detail' appointment.pk %}" class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if appointments.count > 5 %}
+                    <div class="text-center mt-2">
+                        <a href="#" class="text-muted">View all {{ appointments.count }} appointments</a>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted text-center">No appointments scheduled</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Medical Records -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-medical me-2"></i>
+                    Medical Records
+                </h5>
+                <a href="{% url 'medical_record_create' pet.pk %}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-plus me-1"></i>New Record
+                </a>
+            </div>
+            <div class="card-body">
+                {% if medical_records %}
+                    {% for record in medical_records|slice:":3" %}
+                    <div class="medical-record mb-3 p-3 border rounded">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="mb-0">{{ record.visit_date }}</h6>
+                            <span class="badge bg-primary">Dr. {{ record.vet.name }}</span>
+                        </div>
+                        <p class="mb-1"><strong>Diagnosis:</strong> {{ record.diagnosis|truncatewords:10 }}</p>
+                        {% if record.treatment %}
+                        <p class="mb-1"><strong>Treatment:</strong> {{ record.treatment|truncatewords:8 }}</p>
+                        {% endif %}
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <small class="text-muted">
+                                {% if record.follow_up_required %}
+                                <i class="fas fa-calendar-check text-warning me-1"></i>
+                                Follow-up: {{ record.follow_up_date }}
+                                {% endif %}
+                            </small>
+                            <a href="{% url 'medical_record_detail' record.pk %}" class="btn btn-sm btn-outline-info">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% if medical_records.count > 3 %}
+                    <div class="text-center">
+                        <a href="#" class="text-muted">View all {{ medical_records.count }} medical records</a>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <p class="text-muted text-center">No medical records available</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Vaccine Records -->
+        <div class="card">
+            <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-syringe me-2"></i>
+                    Vaccine Records
+                </h5>
+                <a href="{% url 'add_vaccine_record' pet.pk %}" class="btn btn-sm btn-outline-light">
+                    <i class="fas fa-plus me-1"></i>Add Vaccine
+                </a>
+            </div>
+            <div class="card-body">
+                {% if vaccines %}
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Vaccine</th>
+                                    <th>Date</th>
+                                    <th>Next Due</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for vaccine in vaccines %}
+                                <tr>
+                                    <td>{{ vaccine.get_vaccine_type_display }}</td>
+                                    <td>{{ vaccine.vaccination_date }}</td>
+                                    <td>{{ vaccine.next_due_date|default:"-" }}</td>
+                                    <td>
+                                        {% if vaccine.is_overdue %}
+                                        <span class="badge bg-danger">Overdue</span>
+                                        {% elif vaccine.is_due_soon %}
+                                        <span class="badge bg-warning">Due Soon</span>
+                                        {% else %}
+                                        <span class="badge bg-success">Current</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">No vaccine records available</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

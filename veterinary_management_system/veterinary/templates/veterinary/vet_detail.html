@@ -1,0 +1,165 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Dr. {{ vet.name }} - VetCare{% endblock %}
+{% block page_title %}Dr. {{ vet.name }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Vet Information -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-md me-2"></i>
+                    Veterinarian Profile
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <div class="vet-avatar mb-3">
+                    <i class="fas fa-user-md fa-4x text-primary"></i>
+                </div>
+                <h4>Dr. {{ vet.name }}</h4>
+                <p class="text-muted">{{ vet.get_specialization_display }}</p>
+                
+                <div class="vet-info text-start">
+                    <p><strong>Email:</strong> {{ vet.email }}</p>
+                    {% if vet.phone %}
+                    <p><strong>Phone:</strong> {{ vet.phone }}</p>
+                    {% endif %}
+                    {% if vet.license_number %}
+                    <p><strong>License:</strong> {{ vet.license_number }}</p>
+                    {% endif %}
+                    <p><strong>Working Hours:</strong> {{ vet.working_hours_start }} - {{ vet.working_hours_end }}</p>
+                    <p><strong>Status:</strong> 
+                        {% if vet.is_active %}
+                        <span class="badge bg-success">Active</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Inactive</span>
+                        {% endif %}
+                    </p>
+                </div>
+
+                {% if vet.bio %}
+                <div class="vet-bio mt-3">
+                    <h6>Bio</h6>
+                    <p class="text-muted">{{ vet.bio }}</p>
+                </div>
+                {% endif %}
+
+                <div class="d-grid gap-2 mt-3">
+                    <a href="{% url 'vet_dashboard_with_id' vet.pk %}" class="btn btn-primary">
+                        <i class="fas fa-tachometer-alt me-1"></i>View Dashboard
+                    </a>
+                    <a href="{% url 'vet_schedule' vet.pk %}" class="btn btn-outline-info">
+                        <i class="fas fa-calendar me-1"></i>View Schedule
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upcoming Appointments -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar me-2"></i>
+                    Upcoming Appointments
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if upcoming_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Date & Time</th>
+                                    <th>Pet</th>
+                                    <th>Owner</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in upcoming_appointments %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ appointment.date|date:"M d, Y" }}</strong><br>
+                                        <small class="text-muted">{{ appointment.date|time }}</small>
+                                    </td>
+                                    <td>
+                                        <i class="fas fa-paw text-primary me-1"></i>
+                                        {{ appointment.pet.name }}
+                                    </td>
+                                    <td>{{ appointment.pet.owner_name }}</td>
+                                    <td>{{ appointment.reason }}</td>
+                                    <td>
+                                        <span class="badge {% if appointment.status == 'scheduled' %}bg-warning{% elif appointment.status == 'confirmed' %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {{ appointment.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'appointment_detail' appointment.pk %}" class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No upcoming appointments</h5>
+                        <p class="text-muted">Dr. {{ vet.name }} has no scheduled appointments at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card stat-card border-primary">
+                    <div class="card-body text-center">
+                        <h4 class="fw-bold text-primary">{{ vet.todays_appointments.count }}</h4>
+                        <p class="mb-0 text-muted">Today's Appointments</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card border-success">
+                    <div class="card-body text-center">
+                        <h4 class="fw-bold text-success">{{ vet.upcoming_appointments.count }}</h4>
+                        <p class="mb-0 text-muted">Upcoming</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card border-info">
+                    <div class="card-body text-center">
+                        <h4 class="fw-bold text-info">{{ upcoming_appointments.count }}</h4>
+                        <p class="mb-0 text-muted">Total Upcoming</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.vet-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid #e9ecef;
+}
+</style>
+{% endblock %}

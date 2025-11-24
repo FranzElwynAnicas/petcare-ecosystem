@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Shelter Management System{% endblock %}
+
+{% block content %}
+<style>
+    .stat-card {
+        transition: transform 0.2s;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .feature-icon {
+        font-size: 2.5rem;
+        color: #0d6efd;
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="display-4"><i class="bi bi-house-heart"></i> Welcome to Shelter Management System</h1>
+                <p class="lead">Manage your shelter's pet inventory and provide API services for the adoption platform.</p>
+                <p class="text-muted">This system handles all pets inside the shelter and supplies the Adoption System with pet data.</p>
+            </div>
+            <div class="col-md-4 d-flex align-items-center justify-content-center">
+                <i class="bi bi-shield-check" style="font-size: 120px; color: #0d6efd;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Dashboard -->
+<div class="container mt-5">
+    <h2 class="mb-4"><i class="bi bi-graph-up"></i> Statistics</h2>
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card text-center border-primary">
+                <div class="card-body">
+                    <i class="bi bi-paw feature-icon"></i>
+                    <h3 class="mt-3">{{ stats.total_pets }}</h3>
+                    <p class="text-muted mb-0">Total Pets</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card text-center border-success">
+                <div class="card-body">
+                    <i class="bi bi-check-circle feature-icon text-success"></i>
+                    <h3 class="mt-3">{{ stats.available }}</h3>
+                    <p class="text-muted mb-0">Available</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card text-center border-warning">
+                <div class="card-body">
+                    <i class="bi bi-clock-history feature-icon text-warning"></i>
+                    <h3 class="mt-3">{{ stats.pending }}</h3>
+                    <p class="text-muted mb-0">Pending Adoption</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card stat-card text-center border-info">
+                <div class="card-body">
+                    <i class="bi bi-heart feature-icon text-info"></i>
+                    <h3 class="mt-3">{{ stats.adopted }}</h3>
+                    <p class="text-muted mb-0">Adopted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h3><i class="bi bi-clock-history"></i> Recent Additions</h3>
+            <div class="list-group">
+                {% if stats.recent_additions %}
+                    {% for pet in stats.recent_additions %}
+                    <a href="/pets/{{ pet.id }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ pet.name }}</h5>
+                            <small>{{ pet.created_at[:10] if pet.created_at else 'N/A' }}</small>
+                        </div>
+                        <p class="mb-1">{{ pet.species|title }} - {{ pet.breed or 'Mixed' }}</p>
+                        <small>
+                            <span class="badge bg-{{ 'success' if pet.status == 'available' else 'warning' if pet.status == 'pending' else 'secondary' }}">
+                                {{ pet.status|title }}
+                            </span>
+                        </small>
+                    </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">No pets in system yet. <a href="/pets/add">Add your first pet!</a></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h3><i class="bi bi-activity"></i> Activity Log</h3>
+            <div class="list-group">
+                {% if stats.recent_logs %}
+                    {% for log in stats.recent_logs %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ log.action|title }}</h6>
+                            <small>{{ log.timestamp[:16] if log.timestamp else '' }}</small>
+                        </div>
+                        <p class="mb-1 text-muted small">{{ log.description or 'No description' }}</p>
+                        <small class="text-muted">{{ log.user_name or 'System' }}</small>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">No activity logged yet.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-5 mb-5">
+        <h2><i class="bi bi-lightning"></i> Quick Actions</h2>
+        <div class="d-grid gap-2 d-md-flex">
+            <a href="/pets/add" class="btn btn-primary btn-lg"><i class="bi bi-plus-circle"></i> Add New Pet</a>
+            <a href="/pets" class="btn btn-success btn-lg"><i class="bi bi-list"></i> View All Pets</a>
+            <a href="/chatbot" class="btn btn-info btn-lg text-white"><i class="bi bi-robot"></i> Ask Chatbot</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Pets - Shelter Management System{% endblock %}
+
+{% block content %}
+<style>
+    .pet-card {
+        transition: transform 0.2s;
+    }
+    .pet-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .pet-image {
+        height: 200px;
+        object-fit: cover;
+        width: 100%;
+    }
+    .status-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+</style>
+
+<!-- Header -->
+<div class="bg-light py-4">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1><i class="bi bi-list-ul"></i> Manage All Pets</h1>
+                <p class="text-muted mb-0">View, edit, and manage all pets in the shelter</p>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="/pets/add" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle"></i> Add New Pet
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container mt-4 mb-5">
+    <!-- Filter Section -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="GET" action="/pets" class="row g-3">
+                <div class="col-md-3">
+                    <label for="species" class="form-label">Species</label>
+                    <select class="form-select" id="species" name="species">
+                        <option value="">All Species</option>
+                        <option value="dog" {% if request.args.get('species') == 'dog' %}selected{% endif %}>Dogs</option>
+                        <option value="cat" {% if request.args.get('species') == 'cat' %}selected{% endif %}>Cats</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">All Status</option>
+                        <option value="available" {% if request.args.get('status') == 'available' %}selected{% endif %}>Available</option>
+                        <option value="pending" {% if request.args.get('status') == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="adopted" {% if request.args.get('status') == 'adopted' %}selected{% endif %}>Adopted</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="breed" class="form-label">Breed</label>
+                    <input type="text" class="form-control" id="breed" name="breed" placeholder="Search breed..." value="{{ request.args.get('breed', '') }}">
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4>{{ pets|length }}</h4>
+                    <p class="text-muted mb-0">Total Pets</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4>{{ pets|selectattr('status', 'equalto', 'available')|list|length }}</h4>
+                    <p class="text-muted mb-0">Available</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4>{{ pets|selectattr('status', 'equalto', 'pending')|list|length }}</h4>
+                    <p class="text-muted mb-0">Pending</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h4>{{ pets|selectattr('status', 'equalto', 'adopted')|list|length }}</h4>
+                    <p class="text-muted mb-0">Adopted</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pets Grid -->
+    {% if pets %}
+    <div class="row">
+        {% for pet in pets %}
+        <div class="col-md-4 mb-4">
+            <div class="card pet-card h-100">
+                <div class="position-relative">
+                    {% if pet.image_url %}
+                        <img src="{{ pet.image_url }}" class="card-img-top pet-image" alt="{{ pet.name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/400x200?text=No+Image" class="card-img-top pet-image" alt="No image">
+                    {% endif %}
+                    <span class="badge status-badge bg-{{ 'success' if pet.status == 'available' else 'warning' if pet.status == 'pending' else 'secondary' }}">
+                        {{ pet.status|title }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-{{ 'heart' if pet.species == 'cat' else 'valentine2' }}"></i>
+                        {{ pet.name }}
+                    </h5>
+                    <p class="card-text">
+                        <strong>Species:</strong> {{ pet.species|title }}<br>
+                        <strong>Breed:</strong> {{ pet.breed or 'Mixed' }}<br>
+                        <strong>Age:</strong> {{ pet.age }} {{ 'year' if pet.age == 1 else 'years' }}<br>
+                        <strong>Gender:</strong> {{ pet.gender|title }}
+                    </p>
+                    <p class="card-text text-muted small">
+                        {{ pet.description[:100] }}{{ '...' if pet.description and pet.description|length > 100 else '' }}
+                    </p>
+                    <p class="card-text">
+                        {% if pet.vaccinated %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle"></i> Vaccinated
+                        </span>
+                        {% endif %}
+                        {% if pet.spayed_neutered %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle"></i> Fixed
+                        </span>
+                        {% endif %}
+                        {% if pet.good_with_kids %}
+                        <span class="badge bg-info">
+                            <i class="bi bi-people"></i> Good w/ Kids
+                        </span>
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="card-footer bg-white">
+                    <div class="d-grid gap-2">
+                        <a href="/pets/{{ pet.id }}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-eye"></i> View Details
+                        </a>
+                        <div class="btn-group" role="group">
+                            <a href="/pets/{{ pet.id }}/edit" class="btn btn-outline-warning btn-sm">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="confirmDelete({{ pet.id }})" data-pet-name="{{ pet.name|replace('"', '&quot;') }}">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <i class="bi bi-info-circle" style="font-size: 3rem;"></i>
+        <h4 class="mt-3">No Pets Found</h4>
+        <p>There are no pets in the shelter yet. Start by adding your first pet!</p>
+        <a href="/pets/add" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add Your First Pet
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="petName"></strong> from the system?</p>
+                <p class="text-danger"><i class="bi bi-exclamation-triangle"></i> This action cannot be undone!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete Pet</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete(petId) {
+        const button = event.target;
+        const petName = button.getAttribute('data-pet-name');
+        
+        document.getElementById('petName').textContent = petName;
+        document.getElementById('deleteForm').action = '/pets/' + petId + '/delete';
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+</script>
+{% endblock %}

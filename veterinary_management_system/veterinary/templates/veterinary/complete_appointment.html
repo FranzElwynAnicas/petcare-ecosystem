@@ -1,0 +1,139 @@
+{% extends 'veterinary/base.html' %}
+
+{% block title %}Complete Appointment - VetCare{% endblock %}
+{% block page_title %}Complete Appointment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Complete Appointment
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Completing appointment for <strong>{{ appointment.pet.name }}</strong> with Dr. {{ appointment.vet.name }}
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Appointment Details</h6>
+                        <p><strong>Pet:</strong> {{ appointment.pet.name }}</p>
+                        <p><strong>Owner:</strong> {{ appointment.pet.owner_name }}</p>
+                        <p><strong>Veterinarian:</strong> Dr. {{ appointment.vet.name }}</p>
+                        <p><strong>Date & Time:</strong> {{ appointment.date }}</p>
+                        <p><strong>Reason:</strong> {{ appointment.reason }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Create Medical Record</h6>
+                        <p class="text-muted">Please fill out the medical record for this visit.</p>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Veterinarian *</label>
+                                {{ form.vet }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Visit Date *</label>
+                                {{ form.visit_date }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-primary mt-4 mb-3">Vital Signs</h6>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Weight (kg)</label>
+                                {{ form.weight }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Temperature (°C)</label>
+                                {{ form.temperature }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Heart Rate (BPM)</label>
+                                {{ form.heart_rate }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="form-label">Respiratory Rate</label>
+                                {{ form.respiratory_rate }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="text-primary mt-4 mb-3">Medical Information</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Diagnosis *</label>
+                        {{ form.diagnosis }}
+                        {% if form.diagnosis.errors %}
+                        <div class="text-danger">{{ form.diagnosis.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Symptoms</label>
+                        {{ form.symptoms }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Treatment</label>
+                        {{ form.treatment }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Medications</label>
+                        {{ form.medications }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        {{ form.notes }}
+                    </div>
+
+                    <h6 class="text-primary mt-4 mb-3">Follow-up</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3 form-check">
+                                {{ form.follow_up_required }}
+                                <label class="form-check-label" for="{{ form.follow_up_required.id_for_label }}">
+                                    Follow-up Required
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Follow-up Date</label>
+                                {{ form.follow_up_date }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'appointment_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Appointments
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check me-1"></i>Complete Appointment & Save Record
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

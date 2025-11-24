@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}Edit {{ pet.name }} - Shelter Management System{% endblock %}
+
+{% block content %}
+<style>
+    .form-section {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .section-title {
+        color: #0d6efd;
+        font-weight: bold;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h3 class="mb-0"><i class="bi bi-pencil"></i> Edit Pet: {{ pet.name }}</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="/pets/{{ pet.id }}/edit">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-info-circle"></i> Basic Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">Pet Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{ pet.name }}" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="species" class="form-label">Species</label>
+                                    <select class="form-select" id="species" name="species" required>
+                                        <option value="dog" {{ 'selected' if pet.species == 'dog' else '' }}>Dog</option>
+                                        <option value="cat" {{ 'selected' if pet.species == 'cat' else '' }}>Cat</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="breed" class="form-label">Breed</label>
+                                    <input type="text" class="form-control" id="breed" name="breed" value="{{ pet.breed or '' }}">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="age" class="form-label">Age (years)</label>
+                                    <input type="number" class="form-control" id="age" name="age" value="{{ pet.age }}" min="0" max="30" required>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="gender" class="form-label">Gender</label>
+                                    <select class="form-select" id="gender" name="gender" required>
+                                        <option value="male" {{ 'selected' if pet.gender == 'male' else '' }}>Male</option>
+                                        <option value="female" {{ 'selected' if pet.gender == 'female' else '' }}>Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" rows="3" required>{{ pet.description or '' }}</textarea>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="available" {{ 'selected' if pet.status == 'available' else '' }}>Available</option>
+                                        <option value="pending" {{ 'selected' if pet.status == 'pending' else '' }}>Pending Adoption</option>
+                                        <option value="adopted" {{ 'selected' if pet.status == 'adopted' else '' }}>Adopted</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-heart-pulse"></i> Medical Information
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="vaccinated" name="vaccinated" {{ 'checked' if pet.vaccinated else '' }}>
+                                        <label class="form-check-label" for="vaccinated">
+                                            Vaccinated
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="spayed_neutered" name="spayed_neutered" {{ 'checked' if pet.spayed_neutered else '' }}>
+                                        <label class="form-check-label" for="spayed_neutered">
+                                            Spayed/Neutered
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="microchipped" name="microchipped" {{ 'checked' if pet.microchipped else '' }}>
+                                        <label class="form-check-label" for="microchipped">
+                                            Microchipped
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="special_needs" class="form-label">Special Needs / Medical Notes</label>
+                                <textarea class="form-control" id="special_needs" name="special_needs" rows="3">{{ pet.special_needs or '' }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Behavioral Traits -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="bi bi-emoji-smile"></i> Behavioral Traits
+                            </h4>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_kids" name="good_with_kids" {{ 'checked' if pet.good_with_kids else '' }}>
+                                        <label class="form-check-label" for="good_with_kids">
+                                            Good with Kids
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_pets" name="good_with_pets" {{ 'checked' if pet.good_with_pets else '' }}>
+                                        <label class="form-check-label" for="good_with_pets">
+                                            Good with Other Pets
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_dogs" name="good_with_dogs" {{ 'checked' if pet.good_with_dogs else '' }}>
+                                        <label class="form-check-label" for="good_with_dogs">
+                                            Good with Dogs
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="good_with_cats" name="good_with_cats" {{ 'checked' if pet.good_with_cats else '' }}>
+                                        <label class="form-check-label" for="good_with_cats">
+                                            Good with Cats
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="energy_level" class="form-label">Energy Level</label>
+                                <select class="form-select" id="energy_level" name="energy_level">
+                                    <option value="">Select Energy Level</option>
+                                    <option value="low" {{ 'selected' if pet.energy_level == 'low' else '' }}>Low</option>
+                                    <option value="medium" {{ 'selected' if pet.energy_level == 'medium' else '' }}>Medium</option>
+                                    <option value="high" {{ 'selected' if pet.energy_level == 'high' else '' }}>High</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="/pets/{{ pet.id }}" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-warning btn-lg">
+                                <i class="bi bi-check-circle"></i> Update Pet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

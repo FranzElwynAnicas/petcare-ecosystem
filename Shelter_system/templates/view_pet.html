@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pet.name }} - Pet Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Pet Details Card -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0"><i class="bi bi-info-circle"></i> {{ pet.name }}</h3>
+                    <span class="badge bg-{{ 'success' if pet.status == 'available' else 'warning' if pet.status == 'pending' else 'secondary' }} fs-6">
+                        {{ pet.status|title }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <!-- Images -->
+                    {% if pet.image_url %}
+                    <div class="mb-4">
+                        <img src="{{ pet.image_url }}" class="img-fluid rounded" alt="{{ pet.name }}" style="max-height: 400px; width: 100%; object-fit: cover;">
+                    </div>
+                    {% else %}
+                    <img src="https://via.placeholder.com/800x400?text=No+Image+Available" class="img-fluid mb-4 rounded" alt="No image">
+                    {% endif %}
+
+                    <!-- Basic Information -->
+                    <h5 class="border-bottom pb-2"><i class="bi bi-card-list"></i> Basic Information</h5>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Species:</strong> {{ pet.species|title }}</p>
+                            <p><strong>Breed:</strong> {{ pet.breed or 'Mixed/Unknown' }}</p>
+                            <p><strong>Age:</strong> {{ pet.age }} {{ 'year' if pet.age == 1 else 'years' }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Gender:</strong> {{ pet.gender|title }}</p>
+                            <p><strong>Status:</strong> <span class="badge bg-{{ 'success' if pet.status == 'available' else 'warning' if pet.status == 'pending' else 'secondary' }}">{{ pet.status|title }}</span></p>
+                            <p><strong>Added:</strong> {{ pet.created_at[:10] if pet.created_at else 'N/A' }}</p>
+                        </div>
+                    </div>
+
+                    <h6><strong>Description:</strong></h6>
+                    <p class="text-muted">{{ pet.description or 'No description available.' }}</p>
+
+                    <!-- Medical Information -->
+                    <h5 class="border-bottom pb-2 mt-4"><i class="bi bi-heart-pulse"></i> Medical Information</h5>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <span class="badge bg-{{ 'success' if pet.vaccinated else 'secondary' }}">
+                                <i class="bi bi-{{ 'check-circle' if pet.vaccinated else 'x-circle' }}"></i> Vaccinated
+                            </span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="badge bg-{{ 'success' if pet.spayed_neutered else 'secondary' }}">
+                                <i class="bi bi-{{ 'check-circle' if pet.spayed_neutered else 'x-circle' }}"></i> Spayed/Neutered
+                            </span>
+                        </div>
+                        <div class="col-md-4">
+                            <span class="badge bg-{{ 'success' if pet.microchipped else 'secondary' }}">
+                                <i class="bi bi-{{ 'check-circle' if pet.microchipped else 'x-circle' }}"></i> Microchipped
+                            </span>
+                        </div>
+                    </div>
+                    {% if pet.special_needs %}
+                    <p class="mt-3"><strong>Special Needs:</strong> {{ pet.special_needs }}</p>
+                    {% endif %}
+
+                    <!-- Behavioral Traits -->
+                    <h5 class="border-bottom pb-2 mt-4"><i class="bi bi-emoji-smile"></i> Behavioral Traits</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="badge bg-{{ 'success' if pet.good_with_kids else 'secondary' }}">
+                                <i class="bi bi-{{ 'check-circle' if pet.good_with_kids else 'x-circle' }}"></i> Good with Kids
+                            </span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="badge bg-{{ 'success' if pet.good_with_pets else 'secondary' }}">
+                                <i class="bi bi-{{ 'check-circle' if pet.good_with_pets else 'x-circle' }}"></i> Good with Pets
+                            </span>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <span class="badge bg-{{ 'success' if pet.good_with_dogs else 'secondary' }}">
+                                <i class="bi bi-{{ 'check-circle' if pet.good_with_dogs else 'x-circle' }}"></i> Good with Dogs
+                            </span>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <span class="badge bg-{{ 'success' if pet.good_with_cats else 'secondary' }}">
+                                <i class="bi bi-{{ 'check-circle' if pet.good_with_cats else 'x-circle' }}"></i> Good with Cats
+                            </span>
+                        </div>
+                    </div>
+                    {% if pet.energy_level %}
+                    <p class="mt-3"><strong>Energy Level:</strong> <span class="badge bg-info">{{ pet.energy_level|title }}</span></p>
+                    {% endif %}
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex mt-4">
+                        <a href="/pets/{{ pet.id }}/edit" class="btn btn-warning">
+                            <i class="bi bi-pencil"></i> Edit Pet
+                        </a>
+                        <a href="/pets" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Activity Log -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-activity"></i> Activity Log</h5>
+                </div>
+                <div class="card-body">
+                    {% if logs %}
+                    <div class="list-group">
+                        {% for log in logs %}
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ log.action|title }}</h6>
+                                <small>{{ log.timestamp[:10] if log.timestamp else '' }}</small>
+                            </div>
+                            <p class="mb-1 small">{{ log.description or 'No description' }}</p>
+                            <small class="text-muted">By: {{ log.user_name or 'System' }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted">No activity logged yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-graph-up"></i> Quick Stats</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Created By:</strong> {{ pet.created_by_name or 'System' }}</p>
+                    <p><strong>Intake Date:</strong> 
+                        {% if pet.intake_date %}
+                        {{ pet.intake_date }}
+                        {% elif pet.created_at %}
+                        {{ pet.created_at[:10] }}
+                        {% else %}
+                        N/A
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
