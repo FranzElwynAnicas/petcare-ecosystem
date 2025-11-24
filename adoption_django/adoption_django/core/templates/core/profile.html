@@ -1,0 +1,170 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}My Profile - Pawsitive Manila{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Profile Header -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                            <i class="bi bi-person-fill text-primary display-6"></i>
+                        </div>
+                    </div>
+                    <h2 class="card-title">{{ user.get_full_name|default:"Update your name in profile" }}</h2>
+                    <p class="text-muted">{{ user.username }}</p>
+                    <div class="d-flex justify-content-center gap-2">
+                        <span class="badge bg-primary">
+                            <i class="bi bi-{% if user.userprofile.role == 'shelter' %}building{% elif user.userprofile.role == 'vet' %}clipboard2-pulse{% else %}heart{% endif %} me-1"></i>
+                            {{ user.userprofile.role|title|default:"Adopter" }}
+                        </span>
+                        <span class="badge bg-success">
+                            <i class="bi bi-patch-check me-1"></i> Verified
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Personal Information -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-person-vcard me-2"></i>Personal Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Full Name</label>
+                                <p class="mb-0">{{ user.get_full_name|default:"Not provided" }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Email Address</label>
+                                <p class="mb-0">{{ user.email }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Phone Number</label>
+                                <p class="mb-0">{{ user.userprofile.phone|default:"Not provided" }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Gender</label>
+                                <p class="mb-0">{{ user.userprofile.gender|title|default:"Not provided" }}</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Occupation</label>
+                                <p class="mb-0">{{ user.userprofile.job|default:"Not provided" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information -->
+                <div class="col-md-6 mb-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Address Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small mb-1">Complete Address</label>
+                                <p class="mb-0">{{ user.userprofile.address|default:"Not provided"|linebreaks }}</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label text-muted small mb-1">Barangay</label>
+                                    <p class="mb-0">{{ user.userprofile.barangay|default:"Not provided" }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-muted small mb-1">City</label>
+                                    <p class="mb-0">{{ user.userprofile.city|default:"Not provided" }}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <label class="form-label text-muted small mb-1">Province</label>
+                                    <p class="mb-0">{{ user.userprofile.province|default:"Not provided" }}</p>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-muted small mb-1">ZIP Code</label>
+                                    <p class="mb-0">{{ user.userprofile.zip_code|default:"Not provided" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-shield-check me-2"></i>Account Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label text-muted small mb-1">Member Since</label>
+                            <p class="mb-0">{{ user.date_joined|date:"F j, Y" }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label text-muted small mb-1">Last Login</label>
+                            <p class="mb-0">{{ user.last_login|date:"F j, Y g:i A"|default:"First time login" }}</p>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label text-muted small mb-1">Account Status</label>
+                            <p class="mb-0"><span class="badge bg-success">Active</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">
+                                <i class="bi bi-pencil me-1"></i> Edit Profile
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'change_password' %}" class="btn btn-outline-success w-100">
+                                <i class="bi bi-key me-2"></i>Change Password
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'pet_list' %}" class="btn btn-outline-info w-100">
+                                <i class="bi bi-search me-2"></i>Browse Pets
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 15px;
+}
+
+.badge {
+    font-size: 0.8rem;
+}
+
+.btn {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

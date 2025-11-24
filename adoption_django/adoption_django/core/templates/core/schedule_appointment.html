@@ -1,0 +1,271 @@
+<!-- core/templates/core/schedule_appointment.html -->
+{% extends 'core/base.html' %}
+
+{% block title %}Schedule Vet Appointment - Pawsitive Manila{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Page Header -->
+            <div class="card border-0 bg-primary text-white mb-4">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h1 class="h2 mb-2">
+                                <i class="bi bi-calendar-plus me-2"></i>
+                                Schedule Vet Appointment
+                            </h1>
+                            <p class="mb-0 opacity-75">Book a health checkup for your furry friend</p>
+                        </div>
+                        <div class="col-md-4 text-md-end">
+                            <i class="bi bi-heart-pulse display-4 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Appointment Form -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clipboard-plus text-primary me-2"></i>
+                        Appointment Details
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form id="vetAppointmentForm" method="post" action="{% url 'schedule_vet_appointment' %}">
+                        {% csrf_token %}
+                        
+                        <!-- Pet Information Section -->
+                        <div class="mb-4">
+                            <h6 class="text-primary mb-3">
+                                <i class="bi bi-paw me-2"></i>Pet Information
+                            </h6>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="petName" class="form-label">Pet Name *</label>
+                                        <input type="text" class="form-control" id="petName" name="pet_name" 
+                                               placeholder="Enter your pet's name" required>
+                                        <div class="form-text">What's your pet's name?</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="petSpecies" class="form-label">Species *</label>
+                                        <select class="form-select" id="petSpecies" name="species" required>
+                                            <option value="">Select species</option>
+                                            <option value="dog">🐕 Dog</option>
+                                            <option value="cat">🐈 Cat</option>
+                                            <option value="bird">🐦 Bird</option>
+                                            <option value="rabbit">🐇 Rabbit</option>
+                                            <option value="other">🐾 Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="petBreed" class="form-label">Breed</label>
+                                        <input type="text" class="form-control" id="petBreed" name="breed" 
+                                               placeholder="e.g., Labrador, Persian, Mixed">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="petAge" class="form-label">Approximate Age</label>
+                                        <input type="text" class="form-control" id="petAge" name="pet_age" 
+                                               placeholder="e.g., 2 years, 6 months">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Appointment Details Section -->
+                        <div class="mb-4">
+                            <h6 class="text-primary mb-3">
+                                <i class="bi bi-calendar-event me-2"></i>Appointment Details
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label for="appointmentReason" class="form-label">Reason for Visit *</label>
+                                <select class="form-select" id="appointmentReason" name="reason" required>
+                                    <option value="">Select reason</option>
+                                    <option value="Post-adoption health checkup">🩺 Post-adoption Health Checkup</option>
+                                    <option value="Annual checkup">📅 Annual Checkup</option>
+                                    <option value="Vaccination">💉 Vaccination</option>
+                                    <option value="Dental care">🦷 Dental Care</option>
+                                    <option value="Grooming">✂️ Grooming</option>
+                                    <option value="Emergency">🚨 Emergency Visit</option>
+                                    <option value="Follow-up">📋 Follow-up Visit</option>
+                                    <option value="other">❓ Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="urgency" class="form-label">Urgency Level</label>
+                                <select class="form-select" id="urgency" name="urgency">
+                                    <option value="routine">🟢 Routine - Can wait a few days</option>
+                                    <option value="soon">🟡 Soon - Within 1-2 days</option>
+                                    <option value="urgent">🔴 Urgent - Same day</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information Section -->
+                        <div class="mb-4">
+                            <h6 class="text-primary mb-3">
+                                <i class="bi bi-chat-text me-2"></i>Additional Information
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label for="specialNotes" class="form-label">Special Notes & Symptoms</label>
+                                <textarea class="form-control" id="specialNotes" name="special_notes" rows="4" 
+                                          placeholder="Please describe any symptoms, concerns, or special instructions for our veterinarians..."></textarea>
+                                <div class="form-text">
+                                    Be as detailed as possible. Include symptoms, behavior changes, diet, and any medications.
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="previousVet" class="form-label">Previous Vet Clinic (if any)</label>
+                                <input type="text" class="form-control" id="previousVet" name="previous_vet" 
+                                       placeholder="Name of previous veterinary clinic">
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'home' %}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-1"></i>Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <i class="bi bi-calendar-check me-1"></i>Schedule Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Help Information -->
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body">
+                    <h6 class="card-title">
+                        <i class="bi bi-question-circle text-primary me-2"></i>
+                        Need Help Scheduling?
+                    </h6>
+                    <p class="card-text mb-2">
+                        Our team is here to help you with any questions about scheduling or your pet's health needs.
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>📞 Call Us:</strong><br>
+                            (02) 8123-4567
+                        </div>
+                        <div class="col-md-6">
+                            <strong>🕒 Clinic Hours:</strong><br>
+                            Mon-Fri: 8AM-6PM<br>
+                            Sat: 9AM-4PM
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="successModalLabel">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    Appointment Scheduled!
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <i class="bi bi-calendar-check text-success display-1 mb-3"></i>
+                <h4 class="text-success mb-3">Successfully Scheduled!</h4>
+                <p class="mb-3" id="successMessage">Your vet appointment has been scheduled successfully.</p>
+                <p class="text-muted">You'll receive a confirmation email shortly.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="{% url 'my_appointments' %}" class="btn btn-outline-secondary me-2">
+                    <i class="bi bi-calendar me-1"></i>View My Appointments
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-primary">
+                    <i class="bi bi-house me-1"></i>Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('vetAppointmentForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic validation
+            const petName = document.getElementById('petName').value;
+            const petSpecies = document.getElementById('petSpecies').value;
+            const reason = document.getElementById('appointmentReason').value;
+            
+            if (!petName || !petSpecies || !reason) {
+                alert('Please fill in all required fields (Pet Name, Species, and Reason for Visit).');
+                return;
+            }
+            
+            // Show loading state
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i> Scheduling...';
+            submitBtn.disabled = true;
+            
+            // Submit form via AJAX
+            const formData = new FormData(form);
+            
+            fetch("{% url 'schedule_vet_appointment' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success modal
+                    document.getElementById('successMessage').textContent = data.message;
+                    successModal.show();
+                    
+                    // Reset form
+                    form.reset();
+                } else {
+                    alert('Error: ' + (data.error || 'Failed to schedule appointment.'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while scheduling the appointment.');
+            })
+            .finally(() => {
+                // Restore button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

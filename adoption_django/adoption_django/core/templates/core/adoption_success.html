@@ -1,0 +1,94 @@
+<!-- core/templates/core/adoption_success.html -->
+{% extends 'core/base.html' %}
+
+{% block title %}Adoption Successful - Pawsitive Manila{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Success Card -->
+            <div class="card border-success shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h2 class="mb-0">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        Adoption Application Submitted Successfully!
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <!-- Application Details -->
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Application Details
+                        </h5>
+                        <hr>
+                        <p class="mb-1"><strong>Pet:</strong> {{ application.pet_name }}</p>
+                        <p class="mb-1"><strong>Application ID:</strong> #{{ application.id }}</p>
+                        <p class="mb-1"><strong>Status:</strong> 
+                            <span class="badge bg-warning">{{ application.get_status_display }}</span>
+                        </p>
+                        <p class="mb-0"><strong>Applied Date:</strong> {{ application.applied_date|date:"M d, Y" }}</p>
+                    </div>
+
+                    <!-- Vet Appointment Result -->
+                    {% if appointment_result %}
+                        {% if appointment_result.success %}
+                        <div class="alert alert-success">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-calendar-check me-2"></i>
+                                Vet Appointment Scheduled!
+                            </h5>
+                            <hr>
+                            <p class="mb-1"><strong>Appointment ID:</strong> #{{ appointment_result.appointment_id }}</p>
+                            <p class="mb-1"><strong>Message:</strong> {{ appointment_result.message }}</p>
+                            <p class="mb-1"><strong>Date:</strong> {{ appointment_result.details.date|date:"M d, Y H:i" }}</p>
+                            <p class="mb-1"><strong>Veterinarian:</strong> {{ appointment_result.details.vet }}</p>
+                            <p class="mb-0"><strong>Reason:</strong> {{ appointment_result.details.reason }}</p>
+                        </div>
+                        {% else %}
+                        <div class="alert alert-warning">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                Vet Appointment Not Scheduled
+                            </h5>
+                            <hr>
+                            <p class="mb-0">We couldn't automatically schedule your vet appointment. Please schedule one manually using the "Vet Appointment" link in the navigation.</p>
+                            <p class="mb-0 mt-2"><strong>Error:</strong> {{ appointment_result.error }}</p>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+
+                    <!-- Next Steps -->
+                    <div class="alert alert-light border">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-clock me-2"></i>
+                            What Happens Next?
+                        </h5>
+                        <hr>
+                        <ol class="mb-0">
+                            <li>Our team will review your application within 24-48 hours</li>
+                            <li>You'll receive an email with updates on your application status</li>
+                            <li>If approved, we'll contact you to schedule a meet-and-greet</li>
+                            <li>Complete the adoption process and bring your new friend home!</li>
+                        </ol>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{% url 'my_applications' %}" class="btn btn-primary">
+                            <i class="bi bi-heart me-1"></i> View My Applications
+                        </a>
+                        <a href="{% url 'pet_list' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-search me-1"></i> Browse More Pets
+                        </a>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-house me-1"></i> Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

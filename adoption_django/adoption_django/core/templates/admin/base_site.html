@@ -1,0 +1,381 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} | Shelter Management Admin{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        🏠 Shelter Management System
+    </a>
+</h1>
+{% endblock %}
+
+{% block extrastyle %}
+<style>
+:root {
+    --primary: #667eea;
+    --secondary: #764ba2;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+    --danger: #ef4444;
+}
+
+/* Light theme (default) */
+[data-theme="light"], :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --text-muted: #adb5bd;
+    --border-color: #dee2e6;
+    --shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+    --bg-primary: #1a1d23;
+    --bg-secondary: #252a33;
+    --bg-tertiary: #2d3440;
+    --text-primary: #e9ecef;
+    --text-secondary: #adb5bd;
+    --text-muted: #6c757d;
+    --border-color: #495057;
+    --shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Header - Always use our gradient regardless of theme */
+#header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    color: white;
+    border-bottom: none;
+    box-shadow: var(--shadow);
+}
+
+#branding h1 {
+    color: white !important;
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+#branding h1 a {
+    color: white !important;
+    text-decoration: none;
+}
+
+#branding h1 a:hover {
+    color: rgba(255,255,255,0.9) !important;
+}
+
+/* Apply theme variables to main content */
+body {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+#content {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Module headers - keep our gradient */
+.module h2, .module caption, .inline-group h2 {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    color: white !important;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Links */
+a:link, a:visited {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
+
+/* Buttons */
+.button, input[type=submit], input[type=button], .submit-row input {
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.button:hover, input[type=submit]:hover, input[type=button]:hover {
+    background: var(--secondary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+/* Form elements */
+input[type=text], input[type=password], input[type=email], input[type=url],
+input[type=number], textarea, select, .vTextField {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 12px;
+    transition: border-color 0.2s;
+}
+
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus,
+input[type=url]:focus, input[type=number]:focus, textarea:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Tables */
+#changelist table thead th {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#changelist table tbody td, #changelist table tbody th {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#changelist table tbody tr:hover td, #changelist table tbody tr:hover th {
+    background: var(--bg-secondary);
+}
+
+/* Modules and boxes */
+.module, .dashboard .module {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* Pagination */
+.paginator {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border-top: 1px solid var(--border-color);
+}
+
+.paginator a:link, .paginator a:visited {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin: 0 2px;
+}
+
+.paginator a:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Object tools */
+.object-tools a {
+    background: var(--primary);
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+.object-tools a:hover {
+    background: var(--secondary);
+    text-decoration: none;
+}
+
+/* Messages */
+.messagelist .success {
+    background: var(--success);
+    color: white;
+    border-left: 4px solid #059669;
+}
+
+.messagelist .error {
+    background: var(--danger);
+    color: white;
+    border-left: 4px solid #dc2626;
+}
+
+.messagelist .warning {
+    background: var(--warning);
+    color: #000;
+    border-left: 4px solid #d97706;
+}
+
+/* Selector filters */
+.selector {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+}
+
+.selector select {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.selector-chosen h2 {
+    background: var(--success) !important;
+    color: white !important;
+}
+
+/* Calendar and time widgets */
+.calendar, .calendarbox, .clockbox {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.calendar caption, .calendarbox h2 {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+/* Related widget */
+.related-widget-wrapper {
+    background: var(--bg-primary);
+}
+
+/* Inline groups */
+.inline-group {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+}
+
+.inline-group h2 {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%) !important;
+    color: white !important;
+}
+
+/* Breadcrumb */
+.breadcrumbs {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.breadcrumbs a {
+    color: var(--primary);
+}
+
+.breadcrumbs a:hover {
+    color: var(--secondary);
+}
+
+/* Ensure our custom dashboard works with both themes */
+.dashboard {
+    background: var(--bg-secondary);
+}
+
+.welcome-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+}
+
+.model-card {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.model-card .card-content h3 {
+    color: var(--text-primary);
+}
+
+.model-card .card-content p {
+    color: var(--text-secondary);
+}
+
+.message-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.message-item:hover {
+    background: var(--bg-secondary);
+}
+
+.message-item.unread {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: var(--primary);
+}
+
+.quick-action {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.quick-action:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.empty-state {
+    color: var(--text-muted);
+}
+
+.status-item {
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.status-label {
+    color: var(--text-secondary);
+}
+
+/* Make sure form labels are visible */
+label {
+    color: var(--text-primary) !important;
+}
+
+/* Help text */
+.help, p.help {
+    color: var(--text-secondary) !important;
+}
+
+/* Required field indicators */
+.required {
+    color: var(--danger);
+}
+
+/* Ensure the theme toggle remains visible */
+#toggle-theme {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+</style>
+
+<script>
+// Add theme detection and smooth transitions
+document.addEventListener('DOMContentLoaded', function() {
+    // Detect current theme
+    const body = document.body;
+    const isDarkTheme = body.classList.contains('theme-dark') || 
+                        window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Set data-theme attribute for CSS variables
+    document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
+    
+    // Smooth transitions after load
+    setTimeout(() => {
+        document.documentElement.style.transition = 'all 0.3s ease';
+    }, 100);
+});
+</script>
+{% endblock %}

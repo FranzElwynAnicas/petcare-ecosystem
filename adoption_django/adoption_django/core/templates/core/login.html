@@ -1,0 +1,107 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Login - Pawsitive Manila{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow">
+            <div class="card-body p-5">
+                <h2 class="card-title text-center mb-4">
+                    <i class="bi bi-box-arrow-in-right text-primary"></i> Login
+                </h2>
+                
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    
+                    <!-- Display form errors -->
+                    {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <strong>Login failed!</strong> Please check your email and password.
+                    </div>
+                    {% endif %}
+                    
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                        <div class="alert alert-warning">
+                            Your account doesn't have access to this page. To proceed,
+                            please login with an account that has access.
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info">
+                            Please login to access this page.
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="username" name="username" 
+                               value="{{ form.username.value|default:'' }}" required 
+                               placeholder="Enter your email address">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">Remember me</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg w-100 py-2">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                    
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p>Don't have an account? <a href="{% url 'register' %}" class="text-decoration-none">Register here</a></p>
+                </div>
+                
+                <hr>
+                
+                <div class="alert alert-info">
+                    <strong><i class="bi bi-info-circle"></i> Demo Credentials:</strong><br>
+                    <small>
+                        <strong>Adopter:</strong> adopter@example.com / password123<br>
+                        <strong>Shelter:</strong> shelter@example.com / password123<br>
+                        <strong>Vet:</strong> vet@example.com / password123
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 15px;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+}
+
+.alert-info {
+    background-color: rgba(13, 202, 240, 0.1);
+    border-color: rgba(13, 202, 240, 0.2);
+}
+</style>
+{% endblock %}

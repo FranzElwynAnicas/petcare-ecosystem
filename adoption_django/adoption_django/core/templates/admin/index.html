@@ -1,0 +1,661 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+        <h1>Welcome back, {{ request.user.first_name|default:request.user.username }}! 👋</h1>
+        <p>Here's what's happening with your shelter today.</p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="dashboard-cards">
+        <div class="model-card primary">
+            <div class="card-icon">
+                <i class="bi bi-envelope"></i>
+            </div>
+            <div class="card-content">
+                <h3>{{ contact_messages_count }}</h3>
+                <p>Contact Messages</p>
+                {% if unread_messages_count > 0 %}
+                <div class="alert-badge">
+                    <span class="badge">{{ unread_messages_count }} new</span>
+                </div>
+                {% endif %}
+            </div>
+            <a href="{% url 'admin:core_contactmessage_changelist' %}" class="card-action">View All</a>
+        </div>
+        
+        <div class="model-card success">
+            <div class="card-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <div class="card-content">
+                <h3>{{ users_count }}</h3>
+                <p>Registered Users</p>
+                <div class="card-subtext">
+                    {{ staff_users_count }} staff members
+                </div>
+            </div>
+            <a href="{% url 'admin:auth_user_changelist' %}" class="card-action">Manage</a>
+        </div>
+        
+        <div class="model-card warning">
+            <div class="card-icon">
+                <i class="bi bi-heart"></i>
+            </div>
+            <div class="card-content">
+                <h3>{{ pets_count }}</h3>
+                <p>Available Pets</p>
+                <div class="card-subtext">
+                    {{ dogs_count }} dogs, {{ cats_count }} cats
+                    <br><small style="font-size: 0.7rem; opacity: 0.8;">(from Shelter API)</small>
+                </div>
+            </div>
+            <a href="/pets/" class="card-action">View Pets</a>
+        </div>
+        
+        <div class="model-card info">
+            <div class="card-icon">
+                <i class="bi bi-clipboard-check"></i>
+            </div>
+            <div class="card-content">
+                <h3>{{ adoption_requests_count }}</h3>
+                <p>Adoption Applications</p>
+                <div class="card-subtext">
+                    {{ pending_requests_count }} pending
+                    <br><small style="font-size: 0.7rem; opacity: 0.8;">(in Django DB)</small>
+                </div>
+            </div>
+            <a href="{% url 'admin:core_adoptionapplication_changelist' %}" class="card-action">Review</a>
+        </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="dashboard-columns">
+        <!-- Recent Messages -->
+        <div class="dashboard-column">
+            <div class="module">
+                <div class="module-header">
+                    <h2>📨 Recent Contact Messages</h2>
+                    <a href="{% url 'admin:core_contactmessage_changelist' %}" class="view-all">View All</a>
+                </div>
+                {% if recent_messages %}
+                <div class="message-list">
+                    {% for message in recent_messages %}
+                    <div class="message-item {% if not message.is_read %}unread{% endif %}">
+                        <div class="message-avatar">
+                            {{ message.first_name|first }}{{ message.last_name|first }}
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <strong>{{ message.first_name }} {{ message.last_name }}</strong>
+                                <span class="message-time">{{ message.created_at|timesince }} ago</span>
+                            </div>
+                            <p class="message-subject">{{ message.get_subject_display }}</p>
+                            <p class="message-preview">{{ message.message|truncatewords:15 }}</p>
+                        </div>
+                        <div class="message-status">
+                            {% if not message.is_read %}
+                            <span class="status-badge new">New</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <p>No messages yet</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dashboard-column">
+            <div class="module">
+                <div class="module-header">
+                    <h2>⚡ Quick Actions</h2>
+                </div>
+                <div class="quick-actions">
+                    <a href="{% url 'admin:core_contactmessage_add' %}" class="quick-action">
+                        <i class="bi bi-plus-circle"></i>
+                        <span>Add Contact Message</span>
+                    </a>
+                    <a href="/pets/" class="quick-action">
+                        <i class="bi bi-search"></i>
+                        <span>Browse Pets</span>
+                    </a>
+                    <a href="{% url 'admin:auth_user_add' %}" class="quick-action">
+                        <i class="bi bi-person-plus"></i>
+                        <span>Add User</span>
+                    </a>
+                    <a href="{% url 'admin:core_adoptionapplication_add' %}" class="quick-action">
+                        <i class="bi bi-clipboard-plus"></i>
+                        <span>Create Adoption Application</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="module">
+                <div class="module-header">
+                    <h2>📊 System Status</h2>
+                </div>
+                <div class="status-list">
+                    <div class="status-item">
+                        <span class="status-label">Database</span>
+                        <span class="status-value success">Online</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Shelter API</span>
+                        <span class="status-value {% if pets_count > 0 %}success{% else %}warning{% endif %}">
+                            {% if pets_count > 0 %}Connected{% else %}Checking...{% endif %}
+                        </span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Active Users</span>
+                        <span class="status-value">{{ active_users_count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Welcome Header */
+.welcome-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.welcome-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2rem;
+}
+
+.welcome-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1.1rem;
+}
+
+/* Enhanced Cards */
+.model-card {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    border: 1px solid var(--border-color);
+    overflow: visible;
+}
+
+.model-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.model-card:hover .card-action {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+.model-card.primary { border-left-color: var(--primary); }
+.model-card.success { border-left-color: var(--success); }
+.model-card.warning { border-left-color: var(--warning); }
+.model-card.info { border-left-color: var(--info); }
+
+.card-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+}
+
+.model-card.success .card-icon { color: var(--success); }
+.model-card.warning .card-icon { color: var(--warning); }
+.model-card.info .card-icon { color: var(--info); }
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h3 {
+    font-size: 2.5rem;
+    margin: 0;
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.card-content p {
+    margin: 5px 0 0 0;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.card-subtext {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 5px;
+}
+
+.alert-badge {
+    margin-top: 8px;
+}
+
+.badge {
+    background: var(--danger);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.card-action {
+    background: var(--primary);
+    color: white !important;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    opacity: 1;
+    visibility: visible;
+    display: block;
+    white-space: nowrap;
+    border: 2px solid var(--primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.card-action:hover {
+    background: var(--secondary);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-color: var(--secondary);
+    text-decoration: none;
+}
+
+/* Dashboard Columns */
+.dashboard-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.dashboard-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Module Styles */
+.module {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.module-header h2 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.25rem;
+}
+
+.view-all {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.view-all:hover {
+    color: var(--secondary);
+}
+
+/* Message List */
+.message-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.message-item:hover {
+    background: var(--bg-secondary);
+}
+
+.message-item.unread {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: var(--primary);
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.message-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.message-header strong {
+    color: var(--text-primary);
+}
+
+.message-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.message-subject {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+}
+
+.message-preview {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-status {
+    flex-shrink: 0;
+}
+
+.status-badge.new {
+    background: var(--warning);
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Quick Actions */
+.quick-actions {
+    display: grid;
+    gap: 12px;
+}
+
+.quick-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: var(--bg-tertiary);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s;
+    border: 1px solid var(--border-color);
+}
+
+.quick-action:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateX(5px);
+    text-decoration: none;
+}
+
+.quick-action i {
+    font-size: 1.2rem;
+}
+
+/* Status List */
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.status-item:last-child {
+    border-bottom: none;
+}
+
+.status-label {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.status-value {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.status-value.success {
+    color: var(--success);
+}
+
+.status-value.warning {
+    color: var(--warning);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Dashboard Cards Grid */
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .dashboard-columns {
+        grid-template-columns: 1fr;
+    }
+    
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .welcome-header {
+        padding: 20px;
+    }
+    
+    .welcome-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .model-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+    
+    .card-content h3 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .module {
+        padding: 15px;
+    }
+    
+    .message-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .message-item {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .message-avatar {
+        align-self: center;
+    }
+}
+
+/* Animation for loading */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard > * {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.dashboard-cards .model-card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-cards .model-card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-cards .model-card:nth-child(3) { animation-delay: 0.3s; }
+.dashboard-cards .model-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Ensure proper contrast in both themes */
+[data-theme="dark"] .model-card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .model-card:hover {
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+}
+
+[data-theme="dark"] .message-item.unread {
+    background: rgba(102, 126, 234, 0.2);
+}
+
+/* Print styles */
+@media print {
+    .welcome-header {
+        background: #667eea !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .model-card {
+        break-inside: avoid;
+        border: 1px solid #ccc !important;
+    }
+}
+</style>
+
+<script>
+// Add some interactive enhancements
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click handlers to message items
+    const messageItems = document.querySelectorAll('.message-item');
+    messageItems.forEach(item => {
+        item.style.cursor = 'pointer';
+        item.addEventListener('click', function() {
+            const messageId = this.dataset.messageId;
+            if (messageId) {
+                window.location.href = `/admin/core/contactmessage/${messageId}/change/`;
+            }
+        });
+    });
+    
+    // Add loading states to quick actions
+    const quickActions = document.querySelectorAll('.quick-action');
+    quickActions.forEach(action => {
+        action.addEventListener('click', function(e) {
+            this.style.opacity = '0.7';
+            this.querySelector('span').textContent = 'Opening...';
+        });
+    });
+    
+    // Auto-refresh dashboard every 5 minutes
+    setTimeout(() => {
+        window.location.reload();
+    }, 300000); // 5 minutes
+});
+</script>
+{% endblock %}

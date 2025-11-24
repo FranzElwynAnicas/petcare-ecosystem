@@ -1,0 +1,320 @@
+{% extends "core/base.html" %}
+{% block title %}About Us - Pawsitive Manila{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Hero Section -->
+  <div class="row mb-5">
+    <div class="col-lg-8 mx-auto text-center">
+      <h1 class="display-4 fw-bold mb-4 text-primary">About Pawsitive Manila</h1>
+      <p class="lead">
+        We're on a mission to transform pet adoption in the Philippines by connecting loving pets 
+        with responsible owners through a compassionate, transparent, and efficient process.
+      </p>
+    </div>
+  </div>
+
+  <!-- Mission Cards with Hover Effects -->
+  <div class="row mb-5">
+    <div class="col-md-4 mb-4">
+      <div class="card mission-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="icon-container bg-danger bg-opacity-10 mb-3">
+            <i class="bi bi-heart-fill text-danger display-6"></i>
+          </div>
+          <h4 class="card-title">Our Mission</h4>
+          <p class="card-text">Promote kindness and provide easier access to pets in need of care, love, and a forever home.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card mission-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="icon-container bg-primary bg-opacity-10 mb-3">
+            <i class="bi bi-people-fill text-primary display-6"></i>
+          </div>
+          <h4 class="card-title">Our Community</h4>
+          <p class="card-text">We partner with shelters and volunteers to create a safe and transparent adoption process.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card mission-card h-100 border-0 shadow-sm">
+        <div class="card-body text-center p-4">
+          <div class="icon-container bg-success bg-opacity-10 mb-3">
+            <i class="bi bi-shield-check text-success display-6"></i>
+          </div>
+          <h4 class="card-title">Our Promise</h4>
+          <p class="card-text">Every pet listed on our platform has been properly checked, vaccinated, and evaluated for adoption.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Section
+  <div class="row mb-5 py-4 bg-light rounded-3">
+    <div class="col-12 text-center mb-4">
+      <h2 class="display-5 fw-bold">Our Impact in Numbers</h2>
+      <p class="lead">Together, we're making a difference in the lives of pets and people</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="counter" data-target="0">0</div>
+      <p class="fw-bold text-primary">Pets Adopted</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="counter" data-target="0">0</div>
+      <p class="fw-bold text-success">Partner Shelters</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="counter" data-target="0">0</div>
+      <p class="fw-bold text-info">Volunteers</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <div class="counter" data-target="98">0</div>
+      <p class="fw-bold text-warning">Success Rate %</p>
+    </div>
+  </div> -->
+
+  <!-- Why Choose Us - Enhanced -->
+  <div class="row mb-5">
+    <div class="col-lg-10 mx-auto">
+      <div class="card border-0 shadow">
+        <div class="card-header bg-primary text-white py-3">
+          <h3 class="text-center mb-0"><i class="bi bi-stars me-2"></i>Why Choose Pawsitive Manila?</h3>
+        </div>
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-lightning-charge-fill text-warning fs-4"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5>Fast & Easy Process</h5>
+                  <p class="text-muted mb-0">Streamlined adoption application with quick approval times</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-check-circle-fill text-success fs-4"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5>Verified Profiles</h5>
+                  <p class="text-muted mb-0">All shelters and pet profiles are thoroughly verified</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-chat-dots-fill text-info fs-4"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5>Expert Support</h5>
+                  <p class="text-muted mb-0">Live chat with experienced adoption counselors</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-clipboard2-pulse-fill text-danger fs-4"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5>Health Transparency</h5>
+                  <p class="text-muted mb-0">Complete medical and behavioral history for each pet</p>
+                </div>
+              </div>
+              <div class="d-flex mb-3">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-house-heart-fill text-primary fs-4"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5>Post-Adoption Care</h5>
+                  <p class="text-muted mb-0">Continued guidance and resources for new pet owners</p>
+                </div>
+              </div>
+              <div class="d-flex">
+                <div class="flex-shrink-0">
+                  <i class="bi bi-award-fill text-warning fs-4"></i>
+                </div>
+                <div class="flex-grow-1 ms-3">
+                  <h5>Community Recognition</h5>
+                  <p class="text-muted mb-0">Award-winning platform trusted by thousands</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Section -->
+  <div class="row mb-5">
+    <div class="col-12 text-center mb-4">
+      <h2 class="display-5 fw-bold">Meet Our Team</h2>
+      <p class="lead">Passionate individuals dedicated to animal welfare</p>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card team-card border-0 shadow-sm h-100">
+        <div class="card-body text-center p-4">
+          <div class="team-img mb-3 mx-auto bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+            <i class="bi bi-person-fill text-primary display-4"></i>
+          </div>
+          <h5>Anicas Franz</h5>
+          <p class="text-muted">Founder & Director</p>
+          <p class="small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa asperiores, voluptatem beatae labore soluta quae ullam atque aliquid rerum est nemo nostrum reprehenderit magni? Fuga tempore exercitationem perspiciatis ipsa porro.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card team-card border-0 shadow-sm h-100">
+        <div class="card-body text-center p-4">
+          <div class="team-img mb-3 mx-auto bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+            <i class="bi bi-person-fill text-success display-4"></i>
+          </div>
+          <h5> Kamil Ogoy</h5>
+          <p class="text-muted">Adoption Coordinator</p>
+          <p class="small">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Commodi dolores aperiam ea veniam officia placeat eligendi temporibus facilis blanditiis molestiae! Architecto quisquam accusamus vel dicta illo cum nesciunt? Sed, incidunt.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div class="card team-card border-0 shadow-sm h-100">
+        <div class="card-body text-center p-4">
+          <div class="team-img mb-3 mx-auto bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+            <i class="bi bi-person-fill text-info display-4"></i>
+          </div>
+          <h5>Bella Whitehead</h5>
+          <p class="text-muted">Veterinary Advisor</p>
+          <p class="small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem, quisquam commodi veniam culpa similique tenetur illum obcaecati et exercitationem in earum nihil quo repellat repudiandae consequuntur facilis adipisci cumque at?.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card bg-primary text-white text-center border-0 shadow">
+        <div class="card-body p-5">
+          <h3 class="card-title mb-3">Ready to Make a Difference?</h3>
+          <p class="card-text mb-4">Join our community and help us give every pet the loving home they deserve.</p>
+          <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+            <a href="{% url 'pet_list' %}" class="btn btn-light btn-lg">
+              <i class="bi bi-search me-2"></i> Browse Pets
+            </a>
+            <a href="/contact/" class="btn btn-outline-light btn-lg">
+              <i class="bi bi-heart me-2"></i> Volunteer
+            </a>
+            <a href="#" class="btn btn-outline-light btn-lg">
+              <i class="bi bi-share me-2"></i> Share Our Mission
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.mission-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.mission-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+.team-card {
+  transition: transform 0.3s ease;
+}
+.team-card:hover {
+  transform: translateY(-3px);
+}
+
+.icon-container {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.counter {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #0d6efd;
+}
+
+/* Animation for counters */
+@keyframes countUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.counter.animated {
+  animation: countUp 0.6s ease-out;
+}
+</style>
+
+<script>
+// Counter animation
+document.addEventListener('DOMContentLoaded', function() {
+  const counters = document.querySelectorAll('.counter');
+  const speed = 200; // The lower the slower
+  
+  counters.forEach(counter => {
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText;
+      
+      // Lower inc to slow and higher to slow
+      const inc = target / speed;
+      
+      // Check if target is reached
+      if (count < target) {
+        // Add inc to count and output in counter
+        counter.innerText = Math.ceil(count + inc);
+        // Call function every ms
+        setTimeout(updateCount, 1);
+      } else {
+        counter.innerText = target;
+        counter.classList.add('animated');
+      }
+    };
+    
+    // Start counting when element is in viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          updateCount();
+          observer.unobserve(entry.target);
+        }
+      });
+    });
+    
+    observer.observe(counter);
+  });
+  
+  // Add hover effects to mission cards
+  const missionCards = document.querySelectorAll('.mission-card');
+  missionCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-5px)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0)';
+    });
+  });
+});
+</script>
+{% endblock %}

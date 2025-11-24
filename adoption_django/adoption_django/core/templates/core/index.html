@@ -1,0 +1,117 @@
+{% extends "core/base.html" %}
+
+{% block title %}Home - Pet Adoption System{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">Find Your Perfect Companion</h1>
+                <p class="lead mb-4">Connect with loving pets looking for their forever homes. Browse, apply, and adopt online.</p>
+                <p class="mb-5">Whether you're looking for a playful pup or a cuddly cat, we're here to help you find your perfect match.</p>
+                <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                    <a class="btn btn-primary btn-lg px-4 py-2" href="{% url 'pet_list' %}" role="button">
+                        <i class="bi bi-search me-2"></i> Browse Available Pets
+                    </a>
+                    <a class="btn btn-outline-light btn-lg px-4 py-2" href="#" role="button">
+                        <i class="bi bi-person-plus me-2"></i> Create Account
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card p-4 text-center">
+                    <div class="icon-container paw-bg">
+                        <i class="fa-solid fa-paw paw-icon"></i>
+                    </div>
+                    <h3 class="h4 mt-3">Find Pets</h3>
+                    <p class="text-muted">Search through our adorable dogs and cats looking for homes. Filter by breed, age, size, and more.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card p-4 text-center">
+                    <div class="icon-container clipboard-icon">
+                        <i class="bi bi-clipboard-heart-fill fs-1"></i>
+                    </div>
+                    <h3 class="h4 mt-3">Easy Application</h3>
+                    <p class="text-muted">Submit your adoption application online. Our simple process makes it easy to apply for your future pet.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card p-4 text-center">
+                    <div class="icon-container heart-icon">
+                        <i class="bi bi-heart-pulse-fill fs-1"></i>
+                    </div>
+                    <h3 class="h4 mt-3">Post-Adoption Care</h3>
+                    <p class="text-muted">Access veterinary records, schedule appointments, and receive health updates for your adopted pet.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="display-5 fw-bold">How It Works</h2>
+                <p class="lead">Our simple 4-step process to finding your new family member</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="step-number">1</div>
+                <h5 class="fw-bold">Create Account</h5>
+                <p class="text-muted">Sign up for free and complete your profile</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number">2</div>
+                <h5 class="fw-bold">Browse & Search</h5>
+                <p class="text-muted">Find the perfect pet that matches your lifestyle</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number">3</div>
+                <h5 class="fw-bold">Apply Online</h5>
+                <p class="text-muted">Submit your application through our platform</p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="step-number">4</div>
+                <h5 class="fw-bold">Welcome Home!</h5>
+                <p class="text-muted">Meet your new family member and provide love</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="cta-section p-5 text-center">
+                    <h2 class="display-6 fw-bold mb-3">Ready to Start Your Journey?</h2>
+                    <p class="lead mb-4">Join thousands of happy pet owners who found their companions through our platform.</p>
+                    <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                        <a href="{% url 'pet_list' %}" class="btn btn-primary btn-lg px-4 py-2">
+                            <i class="bi bi-search me-2"></i> Browse Pets
+                        </a>
+                        <a href="#" class="btn btn-outline-primary btn-lg px-4 py-2">
+                            <i class="bi bi-person-plus me-2"></i> Register Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

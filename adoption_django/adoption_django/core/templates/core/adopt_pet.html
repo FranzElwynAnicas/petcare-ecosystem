@@ -1,0 +1,175 @@
+<!-- core/templates/core/adopt_pet.html -->
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Adopt {{ pet.name }} - Pawsitive Manila{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pet_list' %}">Browse Pets</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pet_detail' pet.id %}">{{ pet.name }}</a></li>
+            <li class="breadcrumb-item active">Adoption Application</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0"><i class="bi bi-heart me-2"></i>Adopt {{ pet.name }}</h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Pet Summary -->
+                    <div class="alert alert-info mb-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <!-- FIX: Use image_url instead of primary_image -->
+                                {% if pet.image_url %}
+                                    <img src="{{ pet.image_url }}" class="img-fluid rounded" alt="{{ pet.name }}">
+                                {% else %}
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                        <i class="bi bi-{% if pet.species == 'dog' %}heart{% else %}valentine2{% endif %} text-muted"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-10">
+                                <h5 class="mb-1">{{ pet.name }}</h5>
+                                <p class="mb-1">
+                                    <strong>Species:</strong> {{ pet.species|title }}
+                                    | <strong>Breed:</strong> {{ pet.breed|default:"Mixed" }}
+                                    | <strong>Age:</strong> {{ pet.age }} year{{ pet.age|pluralize }}
+                                </p>
+                                <p class="mb-0 text-muted">{{ pet.description|truncatewords:20 }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Adoption Form -->
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Please correct the errors below:</strong>
+                            <ul class="mb-0">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <h5 class="border-bottom pb-2 mb-4">Personal Information</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_applicant_name" class="form-label">Full Name *</label>
+                                {{ form.applicant_name }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_applicant_email" class="form-label">Email Address *</label>
+                                {{ form.applicant_email }}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_applicant_phone" class="form-label">Phone Number *</label>
+                                {{ form.applicant_phone }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_home_type" class="form-label">Type of Home *</label>
+                                {{ form.home_type }}
+                                <small class="text-muted">e.g., Apartment, House, Condo</small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_applicant_address" class="form-label">Complete Address *</label>
+                            {{ form.applicant_address }}
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-4 mt-4">Household Information</h5>
+
+                        <div class="mb-3">
+                            <label for="id_family_members" class="form-label">Family/Household Members *</label>
+                            {{ form.family_members }}
+                            <small class="text-muted">Please include ages of children, if any</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_previous_pets" class="form-label">Previous Pet Experience *</label>
+                            {{ form.previous_pets }}
+                            <small class="text-muted">Tell us about pets you've owned before</small>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-4 mt-4">Lifestyle & Environment</h5>
+
+                        <div class="mb-3">
+                            <label for="id_yard_info" class="form-label">Yard/Outdoor Space *</label>
+                            {{ form.yard_info }}
+                            <small class="text-muted">Describe your outdoor space (fenced yard, balcony, etc.)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_work_schedule" class="form-label">Work Schedule *</label>
+                            {{ form.work_schedule }}
+                            <small class="text-muted">Your typical work hours and schedule</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_pet_alone_time" class="form-label">Daily Alone Time for Pet *</label>
+                            {{ form.pet_alone_time }}
+                            <small class="text-muted">How many hours would the pet be alone each day?</small>
+                        </div>
+
+                        <h5 class="border-bottom pb-2 mb-4 mt-4">References & Additional Information</h5>
+
+                        <div class="mb-3">
+                            <label for="id_vet_contact" class="form-label">Veterinarian Information</label>
+                            {{ form.vet_contact }}
+                            <small class="text-muted">If you have a current veterinarian, please provide their contact information</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_references" class="form-label">Personal References *</label>
+                            {{ form.references }}
+                            <small class="text-muted">Please provide 2-3 personal references with contact information</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_message" class="form-label">Why do you want to adopt {{ pet.name }}? *</label>
+                            {{ form.message }}
+                            <small class="text-muted">Tell us why you're interested in adopting this specific pet</small>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <h6><i class="bi bi-exclamation-triangle me-2"></i>Important Information</h6>
+                            <ul class="mb-0">
+                                <li>All applications are subject to review and approval</li>
+                                <li>We may contact you for additional information or a home visit</li>
+                                <li>Approval typically takes 24-48 hours</li>
+                                <li>There may be an adoption fee to cover medical expenses</li>
+                            </ul>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'pet_detail' pet.id %}" class="btn btn-outline-secondary me-md-2">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Pet Details
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send me-1"></i> Submit Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

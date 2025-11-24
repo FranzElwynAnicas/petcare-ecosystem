@@ -1,0 +1,165 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Edit Profile - Pawsitive Manila{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+                    <h2 class="card-title text-center mb-4">
+                        <i class="bi bi-pencil-square text-primary"></i> Edit Profile
+                    </h2>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <!-- Display form errors -->
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Please correct the errors below:</strong>
+                            <ul class="mb-0">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <li>{{ field.label }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <!-- Personal Information -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="bi bi-person-vcard me-2"></i>Personal Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="id_first_name" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="id_first_name" name="first_name" 
+                                               value="{{ form.first_name.value|default:'' }}">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="id_last_name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="id_last_name" name="last_name" 
+                                               value="{{ form.last_name.value|default:'' }}">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="id_gender" class="form-label">Gender</label>
+                                        <select class="form-select" id="id_gender" name="gender">
+                                            <option value="">Select Gender</option>
+                                            <option value="male" {% if form.gender.value == 'male' %}selected{% endif %}>Male</option>
+                                            <option value="female" {% if form.gender.value == 'female' %}selected{% endif %}>Female</option>
+                                            <option value="other" {% if form.gender.value == 'other' %}selected{% endif %}>Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="id_job" class="form-label">Job/Occupation</label>
+                                        <input type="text" class="form-control" id="id_job" name="job" 
+                                               value="{{ form.job.value|default:'' }}" placeholder="e.g., Teacher, Engineer">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="id_phone" class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" id="id_phone" name="phone" 
+                                           value="{{ form.phone.value|default:'' }}" placeholder="+63 900 123 4567">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Address Information -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Address Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="id_address" class="form-label">Complete Address</label>
+                                    <textarea class="form-control" id="id_address" name="address" rows="3" 
+                                              placeholder="Unit 5B, Tower 2, Lot 15, Block 3, Pearl Street, Sunshine Subdivision">{{ form.address.value|default:'' }}</textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="id_barangay" class="form-label">Barangay</label>
+                                        <input type="text" class="form-control" id="id_barangay" name="barangay" 
+                                               value="{{ form.barangay.value|default:'' }}" placeholder="Barangay Name">
+                                    </div>
+                                    
+                                    <div class="col-md-4 mb-3">
+                                        <label for="id_city" class="form-label">City/Municipality</label>
+                                        <input type="text" class="form-control" id="id_city" name="city" 
+                                               value="{{ form.city.value|default:'' }}" placeholder="e.g., Manila">
+                                    </div>
+                                    
+                                    <div class="col-md-4 mb-3">
+                                        <label for="id_province" class="form-label">Province</label>
+                                        <input type="text" class="form-control" id="id_province" name="province" 
+                                               value="{{ form.province.value|default:'' }}" placeholder="e.g., Metro Manila">
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="id_zip_code" class="form-label">ZIP Code</label>
+                                        <input type="text" class="form-control" id="id_zip_code" name="zip_code" 
+                                               value="{{ form.zip_code.value|default:'' }}" placeholder="e.g., 1000">
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label for="id_country" class="form-label">Country</label>
+                                        <input type="text" class="form-control" id="id_country" name="country" 
+                                               value="{{ form.country.value|default:'Philippines' }}" readonly class="bg-light">
+                                        <small class="text-muted">Currently serving Philippines only</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'profile' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 15px;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

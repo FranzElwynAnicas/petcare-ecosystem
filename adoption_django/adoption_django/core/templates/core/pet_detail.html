@@ -1,0 +1,205 @@
+<!-- core/templates/core/pet_detail.html -->
+{% extends "core/base.html" %}
+
+{% block title %}{{ pet.name }} - Pet Details{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pet_list' %}">Browse Pets</a></li>
+            <li class="breadcrumb-item active">{{ pet.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Pet Images -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                {% if pet.image_url %}
+                    <img src="{{ pet.image_url }}" class="card-img-top" alt="{{ pet.name }}" 
+                         style="max-height: 500px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                         style="height: 400px;">
+                        <i class="bi bi-{% if pet.species == 'dog' %}heart{% else %}valentine2{% endif %} display-1 text-muted"></i>
+                    </div>
+                {% endif %}
+
+                {% if pet.images and pet.images|length > 1 %}
+                <div class="card-body">
+                    <h6>More Images</h6>
+                    <div class="row">
+                        {% for image in pet.images %}
+                            {% if not image.is_primary %}
+                            <div class="col-4">
+                                <img src="{{ image.image_url }}" class="img-thumbnail" alt="{{ image.caption|default:pet.name }}"
+                                    style="height: 100px; object-fit: cover;">
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Pet Details -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">{{ pet.name }}</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Basic Information -->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <strong>Species:</strong><br>
+                            <span class="badge bg-{% if pet.species == 'dog' %}primary{% else %}info{% endif %}">
+                                {{ pet.species|title }}
+                            </span>
+                        </div>
+                        <div class="col-6">
+                            <strong>Breed:</strong><br>
+                            {{ pet.breed|default:"Mixed" }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <strong>Age:</strong><br>
+                            {{ pet.age }} year{{ pet.age|pluralize }}
+                        </div>
+                        <div class="col-6">
+                            <strong>Gender:</strong><br>
+                            {{ pet.gender|title }}
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <strong>Status:</strong><br>
+                            <span class="badge bg-{% if pet.status == 'available' %}success{% else %}warning{% endif %}">
+                                {{ pet.status|title }}
+                            </span>
+                        </div>
+                        {% if pet.energy_level %}
+                        <div class="col-6">
+                            <strong>Energy Level:</strong><br>
+                            <span class="badge bg-warning">{{ pet.energy_level|title }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Medical Information -->
+                    <h5 class="border-bottom pb-2">Medical Information</h5>
+                    <div class="row mb-4">
+                        <div class="col-4 text-center">
+                            {% if pet.vaccinated %}
+                                <i class="bi bi-check-circle-fill text-success display-6"></i>
+                                <div>Vaccinated</div>
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-secondary display-6"></i>
+                                <div>Not Vaccinated</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-4 text-center">
+                            {% if pet.spayed_neutered %}
+                                <i class="bi bi-check-circle-fill text-success display-6"></i>
+                                <div>Spayed/Neutered</div>
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-secondary display-6"></i>
+                                <div>Not Fixed</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-4 text-center">
+                            {% if pet.microchipped %}
+                                <i class="bi bi-check-circle-fill text-success display-6"></i>
+                                <div>Microchipped</div>
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-secondary display-6"></i>
+                                <div>Not Microchipped</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Behavioral Traits -->
+                    <h5 class="border-bottom pb-2">Behavioral Traits</h5>
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            {% if pet.good_with_kids %}
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>Good with Kids
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-secondary me-2"></i>Not Good with Kids
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            {% if pet.good_with_pets %}
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>Good with Pets
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-secondary me-2"></i>Not Good with Pets
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            {% if pet.good_with_dogs %}
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>Good with Dogs
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-secondary me-2"></i>Not Good with Dogs
+                            {% endif %}
+                        </div>
+                        <div class="col-6">
+                            {% if pet.good_with_cats %}
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>Good with Cats
+                            {% else %}
+                                <i class="bi bi-x-circle-fill text-secondary me-2"></i>Not Good with Cats
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <h5 class="border-bottom pb-2">Description</h5>
+                    <p class="mb-4">{{ pet.description|default:"No description available." }}</p>
+
+                    <!-- Special Needs -->
+                    {% if pet.special_needs %}
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle me-2"></i>Special Needs</h6>
+                        {{ pet.special_needs }}
+                    </div>
+                    {% endif %}
+
+                    <!-- Shelter Information -->
+                    {% if pet.shelter_name %}
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-house me-2"></i>Shelter Information</h6>
+                        <strong>Shelter:</strong> {{ pet.shelter_name }}<br>
+                        {% if pet.shelter_email %}
+                        <strong>Email:</strong> {{ pet.shelter_email }}
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="card-footer">
+                    <div class="d-grid gap-2">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'adopt_pet' pet.id %}" class="btn btn-success btn-lg">
+                            <i class="bi bi-heart me-2"></i>Apply to Adopt
+                        </a>
+                        {% else %}
+                        <a href="{% url 'login' %}?next={% url 'pet_detail' pet.id %}" class="btn btn-success btn-lg">
+                            <i class="bi bi-person me-2"></i>Login to Adopt
+                        </a>
+                        {% endif %}
+                        <a href="{% url 'pet_list' %}" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to All Pets
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
