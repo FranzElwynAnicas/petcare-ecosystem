@@ -4,29 +4,29 @@ This project is created for our course **System Integration**.
 
 ---
 
-## 👥 Members
+##  Members
 - **Franz Elwyn F. Anicas**  
 - **Bella Pereyra Whitehead**  
 - **Kamil Ogoy**
 
 ---
 
-## 🎯 System Overview
+##  System Overview
 This project demonstrates a real-world microservices architecture with three interconnected systems:
 
-### 🏠 Adoption System (Django)
+###  Adoption System (Django)
 - Pet browsing and search functionality  
 - Online adoption applications  
 - User profiles and appointment management  
 - Real-time vet appointment scheduling  
 
-### 🏥 Veterinary System (Django)
+###  Veterinary System (Django)
 - Appointment scheduling and management  
 - Medical records and health tracking  
 - Vaccine and treatment records  
 - Vet staff dashboard  
 
-### 🐕 Shelter System (Flask)
+###  Shelter System (Flask)
 - Animal inventory management  
 - Adoption request processing  
 - Shelter operations dashboard  
@@ -34,7 +34,7 @@ This project demonstrates a real-world microservices architecture with three int
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### **Prerequisites**
 - Python 3.8+  
@@ -97,7 +97,7 @@ Shelter (Flask) External Systems
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 petcare-ecosystem/
 ├── adoption_django/ # Django adoption portal
 ├── veterinary/ # Django veterinary system
@@ -106,7 +106,7 @@ petcare-ecosystem/
 
 ---
 
-## 🔧 Key Features
+##  Key Features
 - Pet browsing & adoption applications  
 - Veterinary appointment scheduling  
 - Shelter inventory management  
@@ -115,14 +115,14 @@ petcare-ecosystem/
 
 ---
 
-## 🔗 Live Systems
+##  Live Systems
 - Adoption: **http://localhost:8000**  
 - Veterinary: **http://localhost:6001**  
 - Shelter: **http://localhost:5001**  
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 **Django**, **Flask**, **REST APIs**, **Bootstrap**
 
 **Tags:** python, django, flask, pet-care, adoption-system, veterinary, shelter-management, microservices
